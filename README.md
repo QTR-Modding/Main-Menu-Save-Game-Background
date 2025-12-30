@@ -1,14 +1,9 @@
 # Credits
 
-The main menu image nif was based on this mod
+The main menu image nif was based on this mods
 
 [Main Menu Image DD-DM](https://www.nexusmods.com/skyrimspecialedition/mods/67908)
-
-Users:
-
-[MeridianoRus](https://www.nexusmods.com/skyrimspecialedition/users/9609463)
-[uranreactor](https://www.nexusmods.com/skyrimspecialedition/users/1863120)
-
+[Dear Diary Dark Mode - SkyUI Menus Replacer SE](https://www.nexusmods.com/skyrimspecialedition/mods/60837)
 ## Environment variables
 
 [How to set up envioriment variables](https://gist.github.com/Thiago099/b45ec7832fb754325b29a61006bcd10c)
