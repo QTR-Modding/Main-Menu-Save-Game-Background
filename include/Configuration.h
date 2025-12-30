@@ -1,10 +1,10 @@
 #pragma once
 namespace Configuration {
     inline int ScreenPoolingIntervalInMilliseconds = 1000;
-    inline bool EnableOnAutoSave = false;
-    inline bool EnableOnQuickSave = true;
-    inline bool EnableOnManualSave = true;
-    inline bool EnableOnOtherSave = true;
+    inline bool UpdateOnAutoSave = false;
+    inline bool UpdateOnQuickSave = true;
+    inline bool UpdateOnManualSave = true;
+    inline bool UpdateOnOtherSave = true;
     void Load();
     void Save();
 };

@@ -1,0 +1,7 @@
+{
+  "MCP.UpdateDescription": "When should the main menu image be updated?",
+  "MCP.UpdateOnAutoSave": "Update on auto save",
+  "MCP.UpdateOnQuickSave": "Update on quick save",
+  "MCP.UpdateOnManualSave": "Update on manual save",
+  "MCP.UpdateOnOtherSave": "Update on other save"
+}

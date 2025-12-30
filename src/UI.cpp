@@ -1,5 +1,7 @@
 ﻿#include "UI.h"
 #include "Configuration.h"
+#include "Translations.h"
+
 void UI::Register() {
     if (!SKSEMenuFramework::IsInstalled()) {
         return;
@@ -10,18 +12,18 @@ void UI::Register() {
 
 
 void __stdcall UI::Config::Render() {
-    ImGuiMCP::Text("When should the menu image be updated");
+    ImGuiMCP::Text(Translations::Get("MCP.UpdateDescription"));
 
-    if (ImGuiMCPComponents::ToggleButton("Enable on auto save", &Configuration::EnableOnAutoSave)) {
+    if (ImGuiMCPComponents::ToggleButton(Translations::Get("MCP.UpdateOnAutoSave"), &Configuration::UpdateOnAutoSave)) {
         Configuration::Save();
     }
-    if (ImGuiMCPComponents::ToggleButton("Enable on quick save", &Configuration::EnableOnQuickSave)) {
+    if (ImGuiMCPComponents::ToggleButton(Translations::Get("MCP.UpdateOnQuickSave"), &Configuration::UpdateOnQuickSave)) {
         Configuration::Save();
     }
-    if (ImGuiMCPComponents::ToggleButton("Enable on manual save", &Configuration::EnableOnManualSave)) {
+    if (ImGuiMCPComponents::ToggleButton(Translations::Get("MCP.UpdateOnManualSave"), &Configuration::UpdateOnManualSave)) {
         Configuration::Save();
     }
-    if (ImGuiMCPComponents::ToggleButton("Enable on other save", &Configuration::EnableOnOtherSave)) {
+    if (ImGuiMCPComponents::ToggleButton(Translations::Get("MCP.UpdateOnOtherSave"), &Configuration::UpdateOnOtherSave)) {
         Configuration::Save();
     }
 }

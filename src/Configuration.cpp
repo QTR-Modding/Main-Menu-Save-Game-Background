@@ -14,21 +14,21 @@ void Configuration::Load() {
         logger::info("ScreenPoolingIntervalInMilliseconds: {}", ScreenPoolingIntervalInMilliseconds);
     }
 
-    if (j.contains("EnableOnAutoSave")) {
-        EnableOnAutoSave = j["EnableOnAutoSave"];
-        logger::info("EnableOnAutoSave: {}", EnableOnAutoSave);
+    if (j.contains("UpdateAutoSave")) {
+        UpdateOnAutoSave = j["UpdateAutoSave"];
+        logger::info("UpdateAutoSave: {}", UpdateOnAutoSave);
     }
-    if (j.contains("EnableOnQuickSave")) {
-        EnableOnQuickSave = j["EnableOnQuickSave"];
-        logger::info("EnableOnQuickSave: {}", EnableOnQuickSave);
+    if (j.contains("UpdateQuickSave")) {
+        UpdateOnQuickSave = j["UpdateQuickSave"];
+        logger::info("UpdateQuickSave: {}", UpdateOnQuickSave);
     }
-    if (j.contains("EnableOnManualSave")) {
-        EnableOnManualSave = j["EnableOnManualSave"];
-        logger::info("EnableOnManualSave: {}", EnableOnManualSave);
+    if (j.contains("UpdateManualSave")) {
+        UpdateOnManualSave = j["UpdateManualSave"];
+        logger::info("UpdateManualSave: {}", UpdateOnManualSave);
     }
-    if (j.contains("EnableOnOtherSave")) {
-        EnableOnOtherSave = j["EnableOnOtherSave"];
-        logger::info("EnableOnOtherSave: {}", EnableOnOtherSave);
+    if (j.contains("UpdateOtherSave")) {
+        UpdateOnOtherSave = j["UpdateOtherSave"];
+        logger::info("UpdateOtherSave: {}", UpdateOnOtherSave);
     }
 }
 
@@ -38,10 +38,10 @@ void Configuration::Save() {
 
     nlohmann::json j;
     j["ScreenPoolingIntervalInMilliseconds"] = ScreenPoolingIntervalInMilliseconds;
-    j["EnableOnAutoSave"] = EnableOnAutoSave;
-    j["EnableOnQuickSave"] = EnableOnQuickSave;
-    j["EnableOnManualSave"] = EnableOnManualSave;
-    j["EnableOnOtherSave"] = EnableOnOtherSave;
+    j["UpdateAutoSave"] = UpdateOnAutoSave;
+    j["UpdateQuickSave"] = UpdateOnQuickSave;
+    j["UpdateManualSave"] = UpdateOnManualSave;
+    j["UpdateOtherSave"] = UpdateOnOtherSave;
 
     std::ofstream file(".\\Data\\SKSE\\Plugins\\MainMenuSaveGameBackground.json");
     if (!file.is_open()) {

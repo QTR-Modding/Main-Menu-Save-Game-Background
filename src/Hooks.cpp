@@ -13,19 +13,19 @@
 char* Hooks::SaveGameHook::thunk(RE::BGSSaveLoadManager* manager, void* a2, char* fileName, void* a4, int32_t deviceId) {
 
     if (deviceId == QUICK_SAVE_DEVICE_ID) {
-        if (Configuration::EnableOnQuickSave) {
+        if (Configuration::UpdateOnQuickSave) {
             MainMenuManager::OnSaveGame();
         }
     } else if (deviceId == AUTO_SAVE_DEVICE_ID) {
-        if (Configuration::EnableOnAutoSave) {
+        if (Configuration::UpdateOnAutoSave) {
             MainMenuManager::OnSaveGame();
         }
     } else if (deviceId == MANUAL_SAVE_DEVICE_ID) {
-        if (Configuration::EnableOnManualSave) {
+        if (Configuration::UpdateOnManualSave) {
             MainMenuManager::OnSaveGame();
         }
     } else {
-        if (Configuration::EnableOnOtherSave) {
+        if (Configuration::UpdateOnOtherSave) {
             MainMenuManager::OnSaveGame();
         }
     }
