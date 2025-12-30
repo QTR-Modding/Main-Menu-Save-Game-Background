@@ -10,7 +10,6 @@ void MainMenuManager::OnRenderUI() {
     if (!Menu::IsOpen()) {
         auto now = steady_clock::now();
         if (duration_cast<milliseconds>(now - lastTime).count() >= Configuration::ScreenPoolingIntervalInMilliseconds) {
-            logger::error("executed");
             lastTime = now;
         }
         Graphics::FetchTextureBuffer();
