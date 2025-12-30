@@ -1,7 +1,7 @@
 {
   "ScreenPoolingIntervalInMilliseconds": 1000,
-  "UpdateAutoSave": false,
-  "UpdateManualSave": true,
-  "UpdateQuickSave": true,
-  "UpdateOtherSave": true
+  "UpdateOnAutoSave": false,
+  "UpdateOnManualSave": true,
+  "UpdateOnQuickSave": true,
+  "UpdateOnOtherSave": true
 }

@@ -14,34 +14,33 @@ void Configuration::Load() {
         logger::info("ScreenPoolingIntervalInMilliseconds: {}", ScreenPoolingIntervalInMilliseconds);
     }
 
-    if (j.contains("UpdateAutoSave")) {
-        UpdateOnAutoSave = j["UpdateAutoSave"];
-        logger::info("UpdateAutoSave: {}", UpdateOnAutoSave);
+    if (j.contains("UpdateOnAutoSave")) {
+        UpdateOnAutoSave = j["UpdateOnAutoSave"];
+        logger::info("UpdateOnAutoSave: {}", UpdateOnAutoSave);
     }
-    if (j.contains("UpdateQuickSave")) {
-        UpdateOnQuickSave = j["UpdateQuickSave"];
-        logger::info("UpdateQuickSave: {}", UpdateOnQuickSave);
+    if (j.contains("UpdateOnQuickSave")) {
+        UpdateOnQuickSave = j["UpdateOnQuickSave"];
+        logger::info("UpdateOnQuickSave: {}", UpdateOnQuickSave);
     }
-    if (j.contains("UpdateManualSave")) {
-        UpdateOnManualSave = j["UpdateManualSave"];
-        logger::info("UpdateManualSave: {}", UpdateOnManualSave);
+    if (j.contains("UpdateOnManualSave")) {
+        UpdateOnManualSave = j["UpdateOnManualSave"];
+        logger::info("UpdateOnManualSave: {}", UpdateOnManualSave);
     }
-    if (j.contains("UpdateOtherSave")) {
-        UpdateOnOtherSave = j["UpdateOtherSave"];
-        logger::info("UpdateOtherSave: {}", UpdateOnOtherSave);
+    if (j.contains("UpdateOnOtherSave")) {
+        UpdateOnOtherSave = j["UpdateOnOtherSave"];
+        logger::info("UpdateOnOtherSave: {}", UpdateOnOtherSave);
     }
 }
-
 
 void Configuration::Save() {
     std::filesystem::create_directories(".\\Data\\SKSE\\Plugins");
 
     nlohmann::json j;
     j["ScreenPoolingIntervalInMilliseconds"] = ScreenPoolingIntervalInMilliseconds;
-    j["UpdateAutoSave"] = UpdateOnAutoSave;
-    j["UpdateQuickSave"] = UpdateOnQuickSave;
-    j["UpdateManualSave"] = UpdateOnManualSave;
-    j["UpdateOtherSave"] = UpdateOnOtherSave;
+    j["UpdateOnAutoSave"] = UpdateOnAutoSave;
+    j["UpdateOnQuickSave"] = UpdateOnQuickSave;
+    j["UpdateOnManualSave"] = UpdateOnManualSave;
+    j["UpdateOnOtherSave"] = UpdateOnOtherSave;
 
     std::ofstream file(".\\Data\\SKSE\\Plugins\\MainMenuSaveGameBackground.json");
     if (!file.is_open()) {
