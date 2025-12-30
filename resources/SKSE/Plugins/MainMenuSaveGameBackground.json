@@ -1,0 +1,7 @@
+{
+  "ScreenPoolingIntervalInMilliseconds": 1000,
+  "EnableOnAutoSave": false,
+  "EnableOnQuickSave": true,
+  "EnableOnManualSave": true,
+  "EnableOnOtherSave": true
+}

@@ -3,7 +3,7 @@
 #include "Configuration.h"
 namespace UI {
     void Register();
-    namespace Main {
+    namespace Config {
         void __stdcall Render();
     }
 };

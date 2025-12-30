@@ -5,9 +5,32 @@
 #include <iostream>
 #include "Graphics.h"
 #include "MainMenuManager.h"
-char* Hooks::SaveGameHook::thunk(RE::BGSSaveLoadManager* manager, void* a2, char* fileName, void* a4, int32_t a5) {
-    MainMenuManager::OnSaveGame();
-    return originalFunction(manager, a2, fileName, a4, a5);
+#include "Configuration.h"
+#define QUICK_SAVE_DEVICE_ID 4
+#define AUTO_SAVE_DEVICE_ID 3
+#define MANUAL_SAVE_DEVICE_ID 2
+
+char* Hooks::SaveGameHook::thunk(RE::BGSSaveLoadManager* manager, void* a2, char* fileName, void* a4, int32_t deviceId) {
+
+    if (deviceId == QUICK_SAVE_DEVICE_ID) {
+        if (Configuration::EnableOnQuickSave) {
+            MainMenuManager::OnSaveGame();
+        }
+    } else if (deviceId == AUTO_SAVE_DEVICE_ID) {
+        if (Configuration::EnableOnAutoSave) {
+            MainMenuManager::OnSaveGame();
+        }
+    } else if (deviceId == MANUAL_SAVE_DEVICE_ID) {
+        if (Configuration::EnableOnManualSave) {
+            MainMenuManager::OnSaveGame();
+        }
+    } else {
+        if (Configuration::EnableOnOtherSave) {
+            MainMenuManager::OnSaveGame();
+        }
+    }
+
+    return originalFunction(manager, a2, fileName, a4, deviceId);
 }
 
 void Hooks::SaveGameHook::Install() {

@@ -11269,3 +11269,53 @@ namespace ImGuiMCP {
         }
     }
 }
+
+namespace ImGuiMCPComponents {
+    inline bool ToggleButton(const char* label, bool* v) {
+        ImGuiMCP::ImVec2 p;
+        ImGuiMCP::GetCursorScreenPos(&p);
+        ImGuiMCP::ImDrawList* draw_list = ImGuiMCP::GetWindowDrawList();
+        float height = ImGuiMCP::GetFrameHeight();
+        float width = height * 1.8f;
+        float radius = height * 0.5f;
+
+        // Use a unique ID for the button
+        ImGuiMCP::PushID(label);
+
+        // Use Selectable instead of InvisibleButton for gamepad navigation
+        ImGuiMCP::PushStyleColor(ImGuiMCP::ImGuiCol_Header, ImGuiMCP::ImVec4(0, 0, 0, 0));
+        ImGuiMCP::PushStyleColor(ImGuiMCP::ImGuiCol_HeaderHovered, ImGuiMCP::ImVec4(0, 0, 0, 0));
+        ImGuiMCP::PushStyleColor(ImGuiMCP::ImGuiCol_HeaderActive, ImGuiMCP::ImVec4(0, 0, 0, 0));
+
+        bool clicked = ImGuiMCP::Selectable(std::format("##toggle-{}", label).c_str(), false, 0, ImGuiMCP::ImVec2(width, height));
+
+        ImGuiMCP::PopStyleColor(3);
+        ImGuiMCP::PopID();
+
+        if (clicked) {
+            *v = !*v;
+        }
+
+        // Draw the toggle on top of the selectable
+        ImGuiMCP::ImVec2 p_min = ImGuiMCP::ImVec2(p.x, p.y);
+        ImGuiMCP::ImVec2 p_max = ImGuiMCP::ImVec2(p.x + width, p.y + height);
+
+        float t = *v ? 1.0f : 0.0f;
+        ImGuiMCP::ImU32 col_bg = ImGuiMCP::GetColorU32(*v ? ImGuiMCP::ImGuiCol_ButtonActive : ImGuiMCP::ImGuiCol_ButtonActive);
+
+        ImGuiMCP::ImDrawListManager::AddRectFilled(draw_list, p_min, p_max, col_bg, height * 0.5f, 0);
+        ImGuiMCP::ImDrawListManager::AddCircleFilled(draw_list, ImGuiMCP::ImVec2(p.x + radius + t * (width - radius * 2.0f), p.y + radius), radius - 1.5f, IM_COL32(255, 255, 255, 255), 32);
+
+        ImGuiMCP::SameLine();
+
+        std::string displayLabel = label;
+        size_t pos = displayLabel.find("##");
+        if (pos != std::string::npos) {
+            ImGuiMCP::Text("%.*s", (int)pos, displayLabel.c_str());
+        } else {
+            ImGuiMCP::Text("%s", label);
+        }
+
+        return clicked;
+    }
+}
