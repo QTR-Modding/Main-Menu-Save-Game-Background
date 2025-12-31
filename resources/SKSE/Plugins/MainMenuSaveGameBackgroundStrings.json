@@ -5,5 +5,12 @@
   "MCP.UpdateOnManualSave": "Update on manual save",
   "MCP.UpdateOnOtherSave": "Update on other save",
   "MCP.OutputImageEffects": "Effects that will be applied to the generated image",
-  "MCP.PostProcess": "Post Process Image"
+  "MCP.PostProcess": "Post Process Image",
+  "MCP.BlurRadius": "Blur Radius",
+  "MCP.Brightness": "Brightness",
+  "MCP.Saturation": "Saturation",
+  "MCP.Contrast": "Contrast",
+  "MCP.RMultiply": "RMultiply",
+  "MCP.GMultiply": "GMultiply",
+  "MCP.BMultiply": "BMultiply"
 }
