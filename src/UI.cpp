@@ -54,7 +54,10 @@ void __stdcall UI::Config::PostProcess() {
         if (ImGuiMCP::InputFloat(Translations::Get("MCP.BMultiply"), &Configuration::BMultiply)) {
             Configuration::Save();
         }
-        auto texture = Graphics::GetCurrentFrameSRV();
+        if (ImGuiMCP::Button("Preview")) {
+            Graphics::UpdatePostProcessedFrame();
+        }
+        auto texture = Graphics::GetPostProcessedFrame();
         if (texture) {
             D3D11_TEXTURE2D_DESC desc;
             ID3D11Resource* resource = nullptr;

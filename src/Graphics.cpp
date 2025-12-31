@@ -180,18 +180,18 @@ bool Graphics::ApplyGaussianBlur(ID3D11Texture2D* inputTex, ID3D11Texture2D** ou
     *outputTex = blurTex.Detach();
     return true;
 }
-ID3D11ShaderResourceView* Graphics::GetCurrentFrameSRV() {
+void Graphics::UpdatePostProcessedFrame() {
     std::shared_lock lock(mutex);
-    if (!oldFrame) return nullptr;
+    if (!oldFrame) return;
 
     ID3D11Resource* resource = nullptr;
     oldFrame->GetResource(&resource);
-    if (!resource) return nullptr;
+    if (!resource) return;
 
     ID3D11Texture2D* tex2D = nullptr;
     HRESULT hr = resource->QueryInterface(__uuidof(ID3D11Texture2D), reinterpret_cast<void**>(&tex2D));
     resource->Release();
-    if (FAILED(hr)) return nullptr;
+    if (FAILED(hr)) return;
 
     ID3D11Texture2D* finalTex = tex2D;
     if (Configuration::PostProcess) {
@@ -214,8 +214,11 @@ ID3D11ShaderResourceView* Graphics::GetCurrentFrameSRV() {
     if (Configuration::PostProcess && finalTex != tex2D) finalTex->Release();
     tex2D->Release();
 
-    if (FAILED(hr)) return nullptr;
+    if (FAILED(hr)) return;
+}
+ID3D11ShaderResourceView* Graphics::GetPostProcessedFrame() { 
     return oldPostProcessedFrame;
+
 }
 bool Graphics::SaveCurrentFrameAsDDS(const wchar_t* filename) {
 
