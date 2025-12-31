@@ -1,8 +1,15 @@
 {
-  "ScreenPoolingIntervalInMilliseconds": 1000,
-  "UpdateOnAutoSave": false,
-  "UpdateOnManualSave": true,
-  "UpdateOnQuickSave": true,
-  "UpdateOnOtherSave": true,
-  "PostProcess": false
+    "BMultiply": 1.0,
+    "BlurRadius": 25.0,
+    "Brightness": 0.6000000238418579,
+    "Contrast": 1.0,
+    "GMultiply": 1.0,
+    "PostProcess": false,
+    "RMultiply": 1.0,
+    "Saturation": 1.0,
+    "ScreenPoolingIntervalInMilliseconds": 1000,
+    "UpdateOnAutoSave": false,
+    "UpdateOnManualSave": true,
+    "UpdateOnOtherSave": true,
+    "UpdateOnQuickSave": true
 }
