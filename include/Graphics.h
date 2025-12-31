@@ -10,7 +10,12 @@ class Graphics {
 
     static inline ID3D11ShaderResourceView* oldFrame = nullptr;
     static inline ID3D11ShaderResourceView* oldPostProcessedFrame = nullptr;
-    static bool ApplyGaussianBlur(ID3D11Texture2D* inputTex, ID3D11Texture2D** outputTex);
+
+    static inline Microsoft::WRL::ComPtr<ID3D11ComputeShader> gaussianBlurCS;
+
+    static bool InitShaders();
+    static bool PostProcessTexture(ID3D11Texture2D* inputTex, ID3D11Texture2D** outputTex);
+
 public:
     static void Install(IDXGISwapChain* swapChain, ID3D11Device* device, ID3D11DeviceContext* context);
     static void FetchTextureBuffer();

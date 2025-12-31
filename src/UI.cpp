@@ -66,7 +66,8 @@ void __stdcall UI::Config::PostProcess() {
             tex2D->GetDesc(&desc);
 
             float aspect = static_cast<float>(desc.Height) / desc.Width;
-            float width = 640.0f;
+            float screenWidth = ImGuiMCP::GetIO()->DisplaySize.x;
+            float width = screenWidth / 3.0f;
             float height = width * aspect;
 
             ImGuiMCP::Image(texture, ImGuiMCP::ImVec2(width, height));
