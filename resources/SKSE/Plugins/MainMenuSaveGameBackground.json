@@ -3,5 +3,6 @@
   "UpdateOnAutoSave": false,
   "UpdateOnManualSave": true,
   "UpdateOnQuickSave": true,
-  "UpdateOnOtherSave": true
+  "UpdateOnOtherSave": true,
+  "PostProcess": false
 }

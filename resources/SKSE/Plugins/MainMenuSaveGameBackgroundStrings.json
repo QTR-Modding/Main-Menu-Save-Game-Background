@@ -3,5 +3,7 @@
   "MCP.UpdateOnAutoSave": "Update on auto save",
   "MCP.UpdateOnQuickSave": "Update on quick save",
   "MCP.UpdateOnManualSave": "Update on manual save",
-  "MCP.UpdateOnOtherSave": "Update on other save"
+  "MCP.UpdateOnOtherSave": "Update on other save",
+  "MCP.OutputImageEffects": "Effects that will be applied to the generated image",
+  "MCP.PostProcess": "Post Process Image"
 }

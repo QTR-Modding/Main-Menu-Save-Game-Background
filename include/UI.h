@@ -5,5 +5,6 @@ namespace UI {
     void Register();
     namespace Config {
         void __stdcall Render();
+        void __stdcall PostProcess();
     }
 };

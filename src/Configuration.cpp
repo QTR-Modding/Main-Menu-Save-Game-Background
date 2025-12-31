@@ -30,6 +30,38 @@ void Configuration::Load() {
         UpdateOnOtherSave = j["UpdateOnOtherSave"];
         logger::info("UpdateOnOtherSave: {}", UpdateOnOtherSave);
     }
+    if (j.contains("PostProcess")) {
+        PostProcess = j["PostProcess"];
+        logger::info("PostProcess: {}", PostProcess);
+    }
+    if (j.contains("BlurRadius")) {
+        BlurRadius = j["BlurRadius"];
+        logger::info("BlurRadius: {}", BlurRadius);
+    }
+    if (j.contains("Brightness")) {
+        Brightness = j["Brightness"];
+        logger::info("Brightness: {}", Brightness);
+    }
+    if (j.contains("Saturation")) {
+        Saturation = j["Saturation"];
+        logger::info("Saturation: {}", Saturation);
+    }
+    if (j.contains("Contrast")) {
+        Contrast = j["Contrast"];
+        logger::info("Contrast: {}", Contrast);
+    }
+    if (j.contains("RMultiply")) {
+        RMultiply = j["RMultiply"];
+        logger::info("RMultiply: {}", RMultiply);
+    }
+    if (j.contains("GMultiply")) {
+        GMultiply = j["GMultiply"];
+        logger::info("GMultiply: {}", GMultiply);
+    }
+    if (j.contains("BMultiply")) {
+        BMultiply = j["BMultiply"];
+        logger::info("BMultiply: {}", BMultiply);
+    }
 }
 
 void Configuration::Save() {
@@ -41,6 +73,14 @@ void Configuration::Save() {
     j["UpdateOnQuickSave"] = UpdateOnQuickSave;
     j["UpdateOnManualSave"] = UpdateOnManualSave;
     j["UpdateOnOtherSave"] = UpdateOnOtherSave;
+    j["PostProcess"] = PostProcess;
+    j["BlurRadius"] = BlurRadius;
+    j["Brightness"] = Brightness;
+    j["Saturation"] = Saturation;
+    j["Contrast"] = Contrast;
+    j["RMultiply"] = RMultiply;
+    j["GMultiply"] = GMultiply;
+    j["BMultiply"] = BMultiply;
 
     std::ofstream file(".\\Data\\SKSE\\Plugins\\MainMenuSaveGameBackground.json");
     if (!file.is_open()) {
