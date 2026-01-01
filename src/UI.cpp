@@ -33,67 +33,130 @@ void __stdcall UI::Config::Render() {
 void __stdcall UI::Config::PostProcess() {
     ImGuiMCP::Text(Translations::Get("MCP.OutputImageEffects"));
 
-    if (ImGuiMCP::InputFloat(Translations::Get("MCP.BlurRadius"), &Configuration::BlurRadius)) {
-        Configuration::Save();
-    }
-    ImGuiMCP::SameLine();
-    if (ImGuiMCP::Button(std::format("{}##BlurRadius", Translations::Get("MCP.Clear")).c_str())) {
-        Configuration::BlurRadius = 1.0f;
-        Configuration::Save();
-    }
-
-    if (ImGuiMCP::InputFloat(Translations::Get("MCP.VignetteStrength"), &Configuration::VignetteStrength)) {
-        Configuration::Save();
-    }
-    ImGuiMCP::SameLine();
-    if (ImGuiMCP::Button(std::format("{}##VignetteStrength", Translations::Get("MCP.Clear")).c_str())) {
-        Configuration::VignetteStrength = 1.0f;
-        Configuration::Save();
-    }
-
-    if (ImGuiMCP::InputFloat(Translations::Get("MCP.Brightness"), &Configuration::Brightness)) {
-        Configuration::Save();
-    }
-    ImGuiMCP::SameLine();
-    if (ImGuiMCP::Button(std::format("{}##Brightness", Translations::Get("MCP.Clear")).c_str())) {
-        Configuration::Brightness = 1.0f;
-        Configuration::Save();
+    {
+        if (ImGuiMCP::Button(std::format("{}##BlurRadiusClear", Translations::Get("MCP.Clear")).c_str())) {
+            Configuration::BlurRadius = 1.0f;
+            Configuration::Save();
+        }
+        ImGuiMCP::SameLine();
+        if (ImGuiMCP::Button(std::format("{}##BlurRadiusReset", Translations::Get("MCP.Reset")).c_str())) {
+            Configuration::BlurRadius = 12.5f;
+            Configuration::Save();
+        }
+        ImGuiMCP::SameLine();
+        ImGuiMCP::Text(Translations::Get("MCP.BlurRadius"));
+        ImGuiMCP::SameLine();
+        if (ImGuiMCP::InputFloat("##BlurRadius", &Configuration::BlurRadius)) {
+            Configuration::Save();
+        }
     }
 
-    if (ImGuiMCP::InputFloat(Translations::Get("MCP.Contrast"), &Configuration::Contrast)) {
-        Configuration::Save();
-    }
-    ImGuiMCP::SameLine();
-    if (ImGuiMCP::Button(std::format("{}##Contrast", Translations::Get("MCP.Clear")).c_str())) {
-        Configuration::Contrast = 1.0f;
-        Configuration::Save();
-    }
-
-    if (ImGuiMCP::InputFloat(Translations::Get("MCP.RMultiply"), &Configuration::RMultiply)) {
-        Configuration::Save();
-    }
-    ImGuiMCP::SameLine();
-    if (ImGuiMCP::Button(std::format("{}##RMultiply", Translations::Get("MCP.Clear")).c_str())) {
-        Configuration::RMultiply = 1.0f;
-        Configuration::Save();
-    }
-
-    if (ImGuiMCP::InputFloat(Translations::Get("MCP.GMultiply"), &Configuration::GMultiply)) {
-        Configuration::Save();
-    }
-    ImGuiMCP::SameLine();
-    if (ImGuiMCP::Button(std::format("{}##GMultiply", Translations::Get("MCP.Clear")).c_str())) {
-        Configuration::GMultiply = 1.0f;
-        Configuration::Save();
+    {
+        if (ImGuiMCP::Button(std::format("{}##VignetteStrengthClear", Translations::Get("MCP.Clear")).c_str())) {
+            Configuration::VignetteStrength = 0.0f;
+            Configuration::Save();
+        }
+        ImGuiMCP::SameLine();
+        if (ImGuiMCP::Button(std::format("{}##VignetteStrengthReset", Translations::Get("MCP.Reset")).c_str())) {
+            Configuration::VignetteStrength = 1.0f;
+            Configuration::Save();
+        }
+        ImGuiMCP::SameLine();
+        ImGuiMCP::Text(Translations::Get("MCP.VignetteStrength"));
+        ImGuiMCP::SameLine();
+        if (ImGuiMCP::InputFloat("##VignetteStrength", &Configuration::VignetteStrength)) {
+            Configuration::Save();
+        }
     }
 
-    if (ImGuiMCP::InputFloat(Translations::Get("MCP.BMultiply"), &Configuration::BMultiply)) {
-        Configuration::Save();
+    {
+        if (ImGuiMCP::Button(std::format("{}##BrightnessClear", Translations::Get("MCP.Clear")).c_str())) {
+            Configuration::Brightness = 1.0f;
+            Configuration::Save();
+        }
+        ImGuiMCP::SameLine();
+        if (ImGuiMCP::Button(std::format("{}##BrightnessReset", Translations::Get("MCP.Reset")).c_str())) {
+            Configuration::Brightness = 1.0f;
+            Configuration::Save();
+        }
+        ImGuiMCP::SameLine();
+        ImGuiMCP::Text(Translations::Get("MCP.Brightness"));
+        ImGuiMCP::SameLine();
+        if (ImGuiMCP::InputFloat("##Brightness", &Configuration::Brightness)) {
+            Configuration::Save();
+        }
     }
-    ImGuiMCP::SameLine();
-    if (ImGuiMCP::Button(std::format("{}##BMultiply", Translations::Get("MCP.Clear")).c_str())) {
-        Configuration::BMultiply = 1.0f;
-        Configuration::Save();
+
+    {
+        if (ImGuiMCP::Button(std::format("{}##ContrastClear", Translations::Get("MCP.Clear")).c_str())) {
+            Configuration::Contrast = 1.0f;
+            Configuration::Save();
+        }
+        ImGuiMCP::SameLine();
+        if (ImGuiMCP::Button(std::format("{}##ContrastReset", Translations::Get("MCP.Reset")).c_str())) {
+            Configuration::Contrast = 1.0f;
+            Configuration::Save();
+        }
+        ImGuiMCP::SameLine();
+        ImGuiMCP::Text(Translations::Get("MCP.Contrast"));
+        ImGuiMCP::SameLine();
+        if (ImGuiMCP::InputFloat("##Contrast", &Configuration::Contrast)) {
+            Configuration::Save();
+        }
+    }
+
+    {
+        if (ImGuiMCP::Button(std::format("{}##RMultiplyClear", Translations::Get("MCP.Clear")).c_str())) {
+            Configuration::RMultiply = 1.0f;
+            Configuration::Save();
+        }
+        ImGuiMCP::SameLine();
+        if (ImGuiMCP::Button(std::format("{}##RMultiplyReset", Translations::Get("MCP.Reset")).c_str())) {
+            Configuration::RMultiply = 1.0f;
+            Configuration::Save();
+        }
+        ImGuiMCP::SameLine();
+        ImGuiMCP::Text(Translations::Get("MCP.RMultiply"));
+        ImGuiMCP::SameLine();
+        if (ImGuiMCP::InputFloat("##RMultiply", &Configuration::RMultiply)) {
+            Configuration::Save();
+        }
+    }
+
+    {
+        if (ImGuiMCP::Button(std::format("{}##GMultiplyClear", Translations::Get("MCP.Clear")).c_str())) {
+            Configuration::GMultiply = 1.0f;
+            Configuration::Save();
+        }
+        ImGuiMCP::SameLine();
+        if (ImGuiMCP::Button(std::format("{}##GMultiplyReset", Translations::Get("MCP.Reset")).c_str())) {
+            Configuration::GMultiply = 1.0f;
+            Configuration::Save();
+        }
+        ImGuiMCP::SameLine();
+        ImGuiMCP::Text(Translations::Get("MCP.GMultiply"));
+        ImGuiMCP::SameLine();
+        if (ImGuiMCP::InputFloat("##GMultiply", &Configuration::GMultiply)) {
+            Configuration::Save();
+        }
+    }
+
+    {
+        if (ImGuiMCP::Button(std::format("{}##BMultiplyClear", Translations::Get("MCP.Clear")).c_str())) {
+            Configuration::BMultiply = 1.0f;
+            Configuration::Save();
+        }
+        ImGuiMCP::SameLine();
+        if (ImGuiMCP::Button(std::format("{}##BMultiplyReset", Translations::Get("MCP.Reset")).c_str())) {
+            Configuration::BMultiply = 1.0f;
+            Configuration::Save();
+        }
+        ImGuiMCP::SameLine();
+        ImGuiMCP::Text(Translations::Get("MCP.BMultiply"));
+        ImGuiMCP::SameLine();
+        if (ImGuiMCP::InputFloat("##BMultiply", &Configuration::BMultiply)) {
+            Configuration::Save();
+        }
     }
 
     if (ImGuiMCP::Button("Preview")) {

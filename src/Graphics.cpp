@@ -142,7 +142,7 @@ bool Graphics::PostProcessTexture(ID3D11Texture2D* inputTex, ID3D11Texture2D** o
     cbData.outputHeight = outputHeight;
     cbData.offsetX = (INT)((outputWidth - inputDesc.Width) / 2);
     cbData.offsetY = (INT)((outputHeight - inputDesc.Height) / 2);
-    cbData.vignetteStrength = 1;
+    cbData.vignetteStrength = Configuration::VignetteStrength;
 
     Microsoft::WRL::ComPtr<ID3D11Buffer> cb;
     D3D11_BUFFER_DESC bd = {};

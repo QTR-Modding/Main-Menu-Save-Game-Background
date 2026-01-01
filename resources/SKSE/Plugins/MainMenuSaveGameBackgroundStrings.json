@@ -5,13 +5,14 @@
   "MCP.UpdateOnManualSave": "Update on manual save",
   "MCP.UpdateOnOtherSave": "Update on other save",
   "MCP.OutputImageEffects": "Effects that will be applied to the generated image",
-  "MCP.BlurRadius": "Blur Radius (high numbers may impact saving and preview time)",
-  "MCP.Brightness": "Brightness",
-  "MCP.VignetteStrength": "VignetteStrength",
-  "MCP.Saturation": "Saturation",
-  "MCP.Contrast": "Contrast",
-  "MCP.RMultiply": "RMultiply",
-  "MCP.GMultiply": "GMultiply",
-  "MCP.BMultiply": "BMultiply",
-  "MCP.Clear": "Clear"
+  "MCP.BlurRadius": "Blur Radius: ",
+  "MCP.Brightness": "Brightness: ",
+  "MCP.VignetteStrength": "VignetteStrength: ",
+  "MCP.Saturation": "Saturation: ",
+  "MCP.Contrast": "Contrast: ",
+  "MCP.RMultiply": "RMultiply: ",
+  "MCP.GMultiply": "GMultiply: ",
+  "MCP.BMultiply": "BMultiply: ",
+  "MCP.Clear": "Clear",
+  "MCP.Reset": "Reset"
 }
