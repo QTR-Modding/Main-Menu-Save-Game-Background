@@ -36,21 +36,66 @@ void __stdcall UI::Config::PostProcess() {
     if (ImGuiMCP::InputFloat(Translations::Get("MCP.BlurRadius"), &Configuration::BlurRadius)) {
         Configuration::Save();
     }
+    ImGuiMCP::SameLine();
+    if (ImGuiMCP::Button(std::format("{}##BlurRadius", Translations::Get("MCP.Clear")).c_str())) {
+        Configuration::BlurRadius = 1.0f;
+        Configuration::Save();
+    }
+
+    if (ImGuiMCP::InputFloat(Translations::Get("MCP.VignetteStrength"), &Configuration::VignetteStrength)) {
+        Configuration::Save();
+    }
+    ImGuiMCP::SameLine();
+    if (ImGuiMCP::Button(std::format("{}##VignetteStrength", Translations::Get("MCP.Clear")).c_str())) {
+        Configuration::VignetteStrength = 1.0f;
+        Configuration::Save();
+    }
+
     if (ImGuiMCP::InputFloat(Translations::Get("MCP.Brightness"), &Configuration::Brightness)) {
         Configuration::Save();
     }
+    ImGuiMCP::SameLine();
+    if (ImGuiMCP::Button(std::format("{}##Brightness", Translations::Get("MCP.Clear")).c_str())) {
+        Configuration::Brightness = 1.0f;
+        Configuration::Save();
+    }
+
     if (ImGuiMCP::InputFloat(Translations::Get("MCP.Contrast"), &Configuration::Contrast)) {
         Configuration::Save();
     }
+    ImGuiMCP::SameLine();
+    if (ImGuiMCP::Button(std::format("{}##Contrast", Translations::Get("MCP.Clear")).c_str())) {
+        Configuration::Contrast = 1.0f;
+        Configuration::Save();
+    }
+
     if (ImGuiMCP::InputFloat(Translations::Get("MCP.RMultiply"), &Configuration::RMultiply)) {
         Configuration::Save();
     }
+    ImGuiMCP::SameLine();
+    if (ImGuiMCP::Button(std::format("{}##RMultiply", Translations::Get("MCP.Clear")).c_str())) {
+        Configuration::RMultiply = 1.0f;
+        Configuration::Save();
+    }
+
     if (ImGuiMCP::InputFloat(Translations::Get("MCP.GMultiply"), &Configuration::GMultiply)) {
         Configuration::Save();
     }
+    ImGuiMCP::SameLine();
+    if (ImGuiMCP::Button(std::format("{}##GMultiply", Translations::Get("MCP.Clear")).c_str())) {
+        Configuration::GMultiply = 1.0f;
+        Configuration::Save();
+    }
+
     if (ImGuiMCP::InputFloat(Translations::Get("MCP.BMultiply"), &Configuration::BMultiply)) {
         Configuration::Save();
     }
+    ImGuiMCP::SameLine();
+    if (ImGuiMCP::Button(std::format("{}##BMultiply", Translations::Get("MCP.Clear")).c_str())) {
+        Configuration::BMultiply = 1.0f;
+        Configuration::Save();
+    }
+
     if (ImGuiMCP::Button("Preview")) {
         Graphics::UpdatePostProcessedFrame();
     }

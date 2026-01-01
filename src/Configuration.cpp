@@ -34,6 +34,10 @@ void Configuration::Load() {
         BlurRadius = j["BlurRadius"];
         logger::info("BlurRadius: {}", BlurRadius);
     }
+    if (j.contains("VignetteStrength")) {
+        VignetteStrength = j["VignetteStrength"];
+        logger::info("VignetteStrength: {}", VignetteStrength);
+    }
     if (j.contains("Brightness")) {
         Brightness = j["Brightness"];
         logger::info("Brightness: {}", Brightness);
@@ -70,6 +74,7 @@ void Configuration::Save() {
     j["UpdateOnManualSave"] = UpdateOnManualSave;
     j["UpdateOnOtherSave"] = UpdateOnOtherSave;
     j["BlurRadius"] = BlurRadius;
+    j["VignetteStrength"] = VignetteStrength;
     j["Brightness"] = Brightness;
     j["Saturation"] = Saturation;
     j["Contrast"] = Contrast;

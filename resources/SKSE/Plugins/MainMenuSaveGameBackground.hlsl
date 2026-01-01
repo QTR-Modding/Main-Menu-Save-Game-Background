@@ -17,7 +17,7 @@ cbuffer BlurCB : register(b0)
     uint outputHeight;
     int offsetX;
     int offsetY;
-    float padding;
+    float vignetteStrength;
 };
 
 Texture2D inputTex : register(t0);
@@ -68,6 +68,11 @@ void main(uint3 DTid : SV_DispatchThreadID)
     blurred.r *= rMultiply;
     blurred.g *= gMultiply;
     blurred.b *= bMultiply;
-    
+
+    float2 center = float2(outputWidth, outputHeight) * 0.5f;
+    float2 pos = float2(DTid.xy);
+    float dist = length(pos - center) / length(center);
+    blurred.rgb *= 1.0 - vignetteStrength * dist * dist;
+
     outputTex[DTid.xy] = blurred;
 }

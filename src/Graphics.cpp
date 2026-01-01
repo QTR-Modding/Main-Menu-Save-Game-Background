@@ -125,7 +125,7 @@ bool Graphics::PostProcessTexture(ID3D11Texture2D* inputTex, ID3D11Texture2D** o
         UINT outputHeight;
         INT offsetX;
         INT offsetY;
-        float padding;
+        float vignetteStrength;
     } cbData;
 
     cbData.texelSize = DirectX::XMFLOAT2(1.0f / inputDesc.Width, 1.0f / inputDesc.Height);
@@ -142,7 +142,7 @@ bool Graphics::PostProcessTexture(ID3D11Texture2D* inputTex, ID3D11Texture2D** o
     cbData.outputHeight = outputHeight;
     cbData.offsetX = (INT)((outputWidth - inputDesc.Width) / 2);
     cbData.offsetY = (INT)((outputHeight - inputDesc.Height) / 2);
-    cbData.padding = 0.0f;
+    cbData.vignetteStrength = 1;
 
     Microsoft::WRL::ComPtr<ID3D11Buffer> cb;
     D3D11_BUFFER_DESC bd = {};
