@@ -126,7 +126,9 @@ void Hooks::LoadingScreenHook::Install() {
 
 int64_t Hooks::LoadingScreenHook::thunk(int64_t a1, uint32_t a2) {
     auto result = originalFunction(a1, a2);
-    auto dynamicLoadingScreenId = RE::TESDataHandler::GetSingleton()->LookupFormID(0x800, "MainMenuSaveGameBackground.esp");
+    auto dataLoader = RE::TESDataHandler::GetSingleton();
+    if (!dataLoader) return result;
+    auto dynamicLoadingScreenId = dataLoader->LookupFormID(0x800, "MainMenuSaveGameBackground.esp");
     auto dynamicLoadingScreen = RE::TESForm::LookupByID<RE::TESLoadScreen>(dynamicLoadingScreenId);
     if (!dynamicLoadingScreen) return result;
     const auto ui = RE::UI::GetSingleton();
