@@ -114,10 +114,7 @@ bool Graphics::PostProcessTexture(ID3D11Texture2D* inputTex, ID3D11Texture2D** o
 
         float saturation;
         float contrast;
-        float rMultiply;
-        float gMultiply;
 
-        float bMultiply;
         UINT inputWidth;
         UINT inputHeight;
         UINT outputWidth;
@@ -126,6 +123,7 @@ bool Graphics::PostProcessTexture(ID3D11Texture2D* inputTex, ID3D11Texture2D** o
         INT offsetX;
         INT offsetY;
         float vignetteStrength;
+        float padding[3];
     } cbData;
 
     cbData.texelSize = DirectX::XMFLOAT2(1.0f / inputDesc.Width, 1.0f / inputDesc.Height);
@@ -133,9 +131,6 @@ bool Graphics::PostProcessTexture(ID3D11Texture2D* inputTex, ID3D11Texture2D** o
     cbData.brightness = Configuration::Brightness;
     cbData.saturation = Configuration::Saturation;
     cbData.contrast = Configuration::Contrast;
-    cbData.rMultiply = Configuration::RMultiply;
-    cbData.gMultiply = Configuration::GMultiply;
-    cbData.bMultiply = Configuration::BMultiply;
     cbData.inputWidth = inputDesc.Width;
     cbData.inputHeight = inputDesc.Height;
     cbData.outputWidth = outputWidth;

@@ -5,9 +5,6 @@ cbuffer BlurCB : register(b0)
     float brightness;
     float saturation;
     float contrast;
-    float rMultiply;
-    float gMultiply;
-    float bMultiply;
     uint inputWidth;
     uint inputHeight;
     uint outputWidth;
@@ -63,9 +60,6 @@ void main(uint3 DTid : SV_DispatchThreadID)
     blurred.rgb = ((blurred.rgb - 0.5f) * contrast) + 0.5f;
     float lum = dot(blurred.rgb, float3(0.299, 0.587, 0.114));
     blurred.rgb = lerp(float3(lum, lum, lum), blurred.rgb, saturation);
-    blurred.r *= rMultiply;
-    blurred.g *= gMultiply;
-    blurred.b *= bMultiply;
 
     float2 center = float2(outputWidth, outputHeight) * 0.5f;
     float2 pos = float2(DTid.xy);

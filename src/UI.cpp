@@ -7,8 +7,8 @@ void UI::Register() {
         return;
     }
     SKSEMenuFramework::SetSection(MOD_NAME);
-    SKSEMenuFramework::AddSectionItem("Config", Config::Render);
-    SKSEMenuFramework::AddSectionItem("PostProcess", Config::PostProcess);
+    SKSEMenuFramework::AddSectionItem(Translations::Get("MCP.Config"), Config::Render);
+    SKSEMenuFramework::AddSectionItem(Translations::Get("MCP.PostProcess"), Config::PostProcess);
 }
 
 
@@ -105,63 +105,10 @@ void __stdcall UI::Config::PostProcess() {
         }
     }
 
-    {
-        if (ImGuiMCP::Button(std::format("{}##RMultiplyClear", Translations::Get("MCP.Clear")).c_str())) {
-            Configuration::RMultiply = 1.0f;
-            Configuration::Save();
-        }
-        ImGuiMCP::SameLine();
-        if (ImGuiMCP::Button(std::format("{}##RMultiplyReset", Translations::Get("MCP.Reset")).c_str())) {
-            Configuration::RMultiply = 1.0f;
-            Configuration::Save();
-        }
-        ImGuiMCP::SameLine();
-        ImGuiMCP::Text(Translations::Get("MCP.RMultiply"));
-        ImGuiMCP::SameLine();
-        if (ImGuiMCP::InputFloat("##RMultiply", &Configuration::RMultiply)) {
-            Configuration::Save();
-        }
-    }
-
-    {
-        if (ImGuiMCP::Button(std::format("{}##GMultiplyClear", Translations::Get("MCP.Clear")).c_str())) {
-            Configuration::GMultiply = 1.0f;
-            Configuration::Save();
-        }
-        ImGuiMCP::SameLine();
-        if (ImGuiMCP::Button(std::format("{}##GMultiplyReset", Translations::Get("MCP.Reset")).c_str())) {
-            Configuration::GMultiply = 1.0f;
-            Configuration::Save();
-        }
-        ImGuiMCP::SameLine();
-        ImGuiMCP::Text(Translations::Get("MCP.GMultiply"));
-        ImGuiMCP::SameLine();
-        if (ImGuiMCP::InputFloat("##GMultiply", &Configuration::GMultiply)) {
-            Configuration::Save();
-        }
-    }
-
-    {
-        if (ImGuiMCP::Button(std::format("{}##BMultiplyClear", Translations::Get("MCP.Clear")).c_str())) {
-            Configuration::BMultiply = 1.0f;
-            Configuration::Save();
-        }
-        ImGuiMCP::SameLine();
-        if (ImGuiMCP::Button(std::format("{}##BMultiplyReset", Translations::Get("MCP.Reset")).c_str())) {
-            Configuration::BMultiply = 1.0f;
-            Configuration::Save();
-        }
-        ImGuiMCP::SameLine();
-        ImGuiMCP::Text(Translations::Get("MCP.BMultiply"));
-        ImGuiMCP::SameLine();
-        if (ImGuiMCP::InputFloat("##BMultiply", &Configuration::BMultiply)) {
-            Configuration::Save();
-        }
-    }
-
     if (ImGuiMCP::Button("Preview")) {
         Graphics::UpdatePostProcessedFrame();
     }
+
     auto texture = Graphics::GetPostProcessedFrame();
     if (texture) {
         D3D11_TEXTURE2D_DESC desc;

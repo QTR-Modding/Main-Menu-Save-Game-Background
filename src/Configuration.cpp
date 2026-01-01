@@ -50,18 +50,6 @@ void Configuration::Load() {
         Contrast = j["Contrast"];
         logger::info("Contrast: {}", Contrast);
     }
-    if (j.contains("RMultiply")) {
-        RMultiply = j["RMultiply"];
-        logger::info("RMultiply: {}", RMultiply);
-    }
-    if (j.contains("GMultiply")) {
-        GMultiply = j["GMultiply"];
-        logger::info("GMultiply: {}", GMultiply);
-    }
-    if (j.contains("BMultiply")) {
-        BMultiply = j["BMultiply"];
-        logger::info("BMultiply: {}", BMultiply);
-    }
 }
 
 void Configuration::Save() {
@@ -78,9 +66,6 @@ void Configuration::Save() {
     j["Brightness"] = Brightness;
     j["Saturation"] = Saturation;
     j["Contrast"] = Contrast;
-    j["RMultiply"] = RMultiply;
-    j["GMultiply"] = GMultiply;
-    j["BMultiply"] = BMultiply;
 
     std::ofstream file(".\\Data\\SKSE\\Plugins\\MainMenuSaveGameBackground.json");
     if (!file.is_open()) {

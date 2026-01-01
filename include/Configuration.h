@@ -11,9 +11,6 @@ namespace Configuration {
     inline float Brightness = 1.0f;
     inline float Saturation = 1.0f;
     inline float Contrast = 1.0f;
-    inline float RMultiply = 1.0f;
-    inline float GMultiply = 1.0f;
-    inline float BMultiply = 1.0f;
     void Load();
     void Save();
 };

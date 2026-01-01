@@ -10,9 +10,8 @@
   "MCP.VignetteStrength": "VignetteStrength: ",
   "MCP.Saturation": "Saturation: ",
   "MCP.Contrast": "Contrast: ",
-  "MCP.RMultiply": "RMultiply: ",
-  "MCP.GMultiply": "GMultiply: ",
-  "MCP.BMultiply": "BMultiply: ",
   "MCP.Clear": "Clear",
-  "MCP.Reset": "Reset"
+  "MCP.Reset": "Reset",
+  "MCP.Config": "Config",
+  "MCP.PostProcess": "Post Process"
 }
