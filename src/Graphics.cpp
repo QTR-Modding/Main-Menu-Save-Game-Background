@@ -237,9 +237,12 @@ bool Graphics::SaveCurrentFrameAsDDS(const wchar_t* filename) {
     }
 
     DirectX::ScratchImage image;
-    DirectX::CaptureTexture(device, context, finalTex, image);
+    HRESULT captureResult = DirectX::CaptureTexture(device, context, finalTex, image);
 
-    bool result = SUCCEEDED(DirectX::SaveToDDSFile(*image.GetImage(0, 0, 0), DirectX::DDS_FLAGS_NONE, filename));
+    bool result = false;
+    if (SUCCEEDED(captureResult)) {
+        result = SUCCEEDED(DirectX::SaveToDDSFile(*image.GetImage(0, 0, 0), DirectX::DDS_FLAGS_NONE, filename));
+    }
 
     if (Configuration::PostProcess && finalTex != tex2D) finalTex->Release();
     resource->Release();
