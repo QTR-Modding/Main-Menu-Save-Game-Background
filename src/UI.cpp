@@ -32,46 +32,42 @@ void __stdcall UI::Config::Render() {
 
 void __stdcall UI::Config::PostProcess() {
     ImGuiMCP::Text(Translations::Get("MCP.OutputImageEffects"));
-    if (ImGuiMCPComponents::ToggleButton(Translations::Get("MCP.PostProcess"), &Configuration::PostProcess)) {
+
+    if (ImGuiMCP::InputFloat(Translations::Get("MCP.BlurRadius"), &Configuration::BlurRadius)) {
         Configuration::Save();
     }
-    if (Configuration::PostProcess) {
-        if (ImGuiMCP::InputFloat(Translations::Get("MCP.BlurRadius"), &Configuration::BlurRadius)) {
-            Configuration::Save();
-        }
-        if (ImGuiMCP::InputFloat(Translations::Get("MCP.Brightness"), &Configuration::Brightness)) {
-            Configuration::Save();
-        }
-        if (ImGuiMCP::InputFloat(Translations::Get("MCP.Contrast"), &Configuration::Contrast)) {
-            Configuration::Save();
-        }
-        if (ImGuiMCP::InputFloat(Translations::Get("MCP.RMultiply"), &Configuration::RMultiply)) {
-            Configuration::Save();
-        }
-        if (ImGuiMCP::InputFloat(Translations::Get("MCP.GMultiply"), &Configuration::GMultiply)) {
-            Configuration::Save();
-        }
-        if (ImGuiMCP::InputFloat(Translations::Get("MCP.BMultiply"), &Configuration::BMultiply)) {
-            Configuration::Save();
-        }
-        if (ImGuiMCP::Button("Preview")) {
-            Graphics::UpdatePostProcessedFrame();
-        }
-        auto texture = Graphics::GetPostProcessedFrame();
-        if (texture) {
-            D3D11_TEXTURE2D_DESC desc;
-            ID3D11Resource* resource = nullptr;
-            texture->GetResource(&resource);
-            auto tex2D = static_cast<ID3D11Texture2D*>(resource);
-            tex2D->GetDesc(&desc);
+    if (ImGuiMCP::InputFloat(Translations::Get("MCP.Brightness"), &Configuration::Brightness)) {
+        Configuration::Save();
+    }
+    if (ImGuiMCP::InputFloat(Translations::Get("MCP.Contrast"), &Configuration::Contrast)) {
+        Configuration::Save();
+    }
+    if (ImGuiMCP::InputFloat(Translations::Get("MCP.RMultiply"), &Configuration::RMultiply)) {
+        Configuration::Save();
+    }
+    if (ImGuiMCP::InputFloat(Translations::Get("MCP.GMultiply"), &Configuration::GMultiply)) {
+        Configuration::Save();
+    }
+    if (ImGuiMCP::InputFloat(Translations::Get("MCP.BMultiply"), &Configuration::BMultiply)) {
+        Configuration::Save();
+    }
+    if (ImGuiMCP::Button("Preview")) {
+        Graphics::UpdatePostProcessedFrame();
+    }
+    auto texture = Graphics::GetPostProcessedFrame();
+    if (texture) {
+        D3D11_TEXTURE2D_DESC desc;
+        ID3D11Resource* resource = nullptr;
+        texture->GetResource(&resource);
+        auto tex2D = static_cast<ID3D11Texture2D*>(resource);
+        tex2D->GetDesc(&desc);
 
-            float aspect = static_cast<float>(desc.Height) / desc.Width;
-            float screenWidth = ImGuiMCP::GetIO()->DisplaySize.x;
-            float width = screenWidth / 3.0f;
-            float height = width * aspect;
+        float aspect = static_cast<float>(desc.Height) / desc.Width;
+        float screenWidth = ImGuiMCP::GetIO()->DisplaySize.x;
+        float width = screenWidth / 3.0f;
+        float height = width * aspect;
 
-            ImGuiMCP::Image(texture, ImGuiMCP::ImVec2(width, height));
-            resource->Release();
-        }
+        ImGuiMCP::Image(texture, ImGuiMCP::ImVec2(width, height));
+        resource->Release();
     }
 }

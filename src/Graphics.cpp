@@ -189,12 +189,12 @@ void Graphics::UpdatePostProcessedFrame() {
     if (FAILED(hr)) return;
 
     ID3D11Texture2D* finalTex = tex2D;
-    if (Configuration::PostProcess) {
-        ID3D11Texture2D* blurredTex = nullptr;
-        if (PostProcessTexture(tex2D, &blurredTex)) {
-            finalTex = blurredTex;
-        }
+
+    ID3D11Texture2D* postProcessedTex = nullptr;
+    if (PostProcessTexture(tex2D, &postProcessedTex)) {
+        finalTex = postProcessedTex;
     }
+
     if (oldPostProcessedFrame != nullptr) {
         oldPostProcessedFrame->Release();
     }
@@ -206,7 +206,7 @@ void Graphics::UpdatePostProcessedFrame() {
 
     hr = device->CreateShaderResourceView(finalTex, &srvDesc, &oldPostProcessedFrame);
 
-    if (Configuration::PostProcess && finalTex != tex2D) finalTex->Release();
+    if (finalTex != tex2D) finalTex->Release();
     tex2D->Release();
 
     if (FAILED(hr)) return;
@@ -229,11 +229,9 @@ bool Graphics::SaveCurrentFrameAsDDS(const wchar_t* filename) {
     auto tex2D = static_cast<ID3D11Texture2D*>(resource);
 
     ID3D11Texture2D* finalTex = tex2D;
-    if (Configuration::PostProcess) {
-        ID3D11Texture2D* blurredTex = nullptr;
-        if (PostProcessTexture(tex2D, &blurredTex)) {
-            finalTex = blurredTex;
-        }
+    ID3D11Texture2D* postProcessedTex = nullptr;
+    if (PostProcessTexture(tex2D, &postProcessedTex)) {
+        finalTex = postProcessedTex;
     }
 
     DirectX::ScratchImage image;
@@ -244,7 +242,7 @@ bool Graphics::SaveCurrentFrameAsDDS(const wchar_t* filename) {
         result = SUCCEEDED(DirectX::SaveToDDSFile(*image.GetImage(0, 0, 0), DirectX::DDS_FLAGS_NONE, filename));
     }
 
-    if (Configuration::PostProcess && finalTex != tex2D) finalTex->Release();
+    if (finalTex != tex2D) finalTex->Release();
     resource->Release();
     return result;
 }

@@ -30,10 +30,6 @@ void Configuration::Load() {
         UpdateOnOtherSave = j["UpdateOnOtherSave"];
         logger::info("UpdateOnOtherSave: {}", UpdateOnOtherSave);
     }
-    if (j.contains("PostProcess")) {
-        PostProcess = j["PostProcess"];
-        logger::info("PostProcess: {}", PostProcess);
-    }
     if (j.contains("BlurRadius")) {
         BlurRadius = j["BlurRadius"];
         logger::info("BlurRadius: {}", BlurRadius);
@@ -73,7 +69,6 @@ void Configuration::Save() {
     j["UpdateOnQuickSave"] = UpdateOnQuickSave;
     j["UpdateOnManualSave"] = UpdateOnManualSave;
     j["UpdateOnOtherSave"] = UpdateOnOtherSave;
-    j["PostProcess"] = PostProcess;
     j["BlurRadius"] = BlurRadius;
     j["Brightness"] = Brightness;
     j["Saturation"] = Saturation;

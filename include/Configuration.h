@@ -6,7 +6,6 @@ namespace Configuration {
     inline bool UpdateOnManualSave = true;
     inline bool UpdateOnOtherSave = true;
 
-    inline bool PostProcess = true;
     inline float BlurRadius = 1.0f;
     inline float Brightness = 1.0f;
     inline float Saturation = 1.0f;

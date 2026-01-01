@@ -4,7 +4,6 @@
     "Brightness": 0.6000000238418579,
     "Contrast": 1.0,
     "GMultiply": 1.0,
-    "PostProcess": false,
     "RMultiply": 1.0,
     "Saturation": 1.0,
     "ScreenPoolingIntervalInMilliseconds": 1000,
