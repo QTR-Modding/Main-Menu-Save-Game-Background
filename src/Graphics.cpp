@@ -72,16 +72,34 @@ bool Graphics::InitShaders() {
 bool Graphics::PostProcessTexture(ID3D11Texture2D* inputTex, ID3D11Texture2D** outputTex) {
     if (!inputTex || !outputTex || !gaussianBlurCS) return false;
 
-    D3D11_TEXTURE2D_DESC desc;
-    inputTex->GetDesc(&desc);
+    D3D11_TEXTURE2D_DESC inputDesc;
+    inputTex->GetDesc(&inputDesc);
 
-    D3D11_TEXTURE2D_DESC blurDesc = desc;
-    blurDesc.BindFlags = D3D11_BIND_UNORDERED_ACCESS | D3D11_BIND_SHADER_RESOURCE;
-    blurDesc.CPUAccessFlags = 0;
-    blurDesc.MiscFlags = 0;
+    // Calculate 16:9 output dimensions that fully contain the input
+    UINT outputWidth, outputHeight;
+    float inputAspect = (float)inputDesc.Width / (float)inputDesc.Height;
+    float targetAspect = 16.0f / 9.0f;
+
+    if (inputAspect > targetAspect) {
+        // Input is wider than 16:9, match input width
+        outputWidth = inputDesc.Width;
+        outputHeight = (UINT)((float)inputDesc.Width / targetAspect + 0.5f);
+    } else {
+        // Input is taller/equal to 16:9, match input height
+        outputHeight = inputDesc.Height;
+        outputWidth = (UINT)((float)inputDesc.Height * targetAspect + 0.5f);
+    }
+
+    // Create 16:9 output texture
+    D3D11_TEXTURE2D_DESC outputDesc = inputDesc;
+    outputDesc.Width = outputWidth;
+    outputDesc.Height = outputHeight;
+    outputDesc.BindFlags = D3D11_BIND_UNORDERED_ACCESS | D3D11_BIND_SHADER_RESOURCE;
+    outputDesc.CPUAccessFlags = 0;
+    outputDesc.MiscFlags = 0;
 
     Microsoft::WRL::ComPtr<ID3D11Texture2D> blurTex;
-    if (FAILED(device->CreateTexture2D(&blurDesc, nullptr, &blurTex))) return false;
+    if (FAILED(device->CreateTexture2D(&outputDesc, nullptr, &blurTex))) return false;
 
     Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> srvInput;
     if (FAILED(device->CreateShaderResourceView(inputTex, nullptr, &srvInput))) return false;
@@ -93,15 +111,24 @@ bool Graphics::PostProcessTexture(ID3D11Texture2D* inputTex, ID3D11Texture2D** o
         DirectX::XMFLOAT2 texelSize;
         float radius;
         float brightness;
+
         float saturation;
         float contrast;
         float rMultiply;
         float gMultiply;
+
         float bMultiply;
-        float padding[3];
+        UINT inputWidth;
+        UINT inputHeight;
+        UINT outputWidth;
+
+        UINT outputHeight;
+        INT offsetX;
+        INT offsetY;
+        float padding;
     } cbData;
 
-    cbData.texelSize = DirectX::XMFLOAT2(1.0f / desc.Width, 1.0f / desc.Height);
+    cbData.texelSize = DirectX::XMFLOAT2(1.0f / inputDesc.Width, 1.0f / inputDesc.Height);
     cbData.radius = Configuration::BlurRadius;
     cbData.brightness = Configuration::Brightness;
     cbData.saturation = Configuration::Saturation;
@@ -109,35 +136,36 @@ bool Graphics::PostProcessTexture(ID3D11Texture2D* inputTex, ID3D11Texture2D** o
     cbData.rMultiply = Configuration::RMultiply;
     cbData.gMultiply = Configuration::GMultiply;
     cbData.bMultiply = Configuration::BMultiply;
+    cbData.inputWidth = inputDesc.Width;
+    cbData.inputHeight = inputDesc.Height;
+    cbData.outputWidth = outputWidth;
+    cbData.outputHeight = outputHeight;
+    cbData.offsetX = (INT)((outputWidth - inputDesc.Width) / 2);
+    cbData.offsetY = (INT)((outputHeight - inputDesc.Height) / 2);
+    cbData.padding = 0.0f;
 
     Microsoft::WRL::ComPtr<ID3D11Buffer> cb;
     D3D11_BUFFER_DESC bd = {};
     bd.ByteWidth = sizeof(BlurCB);
     bd.Usage = D3D11_USAGE_DEFAULT;
     bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-
     D3D11_SUBRESOURCE_DATA initData = {};
     initData.pSysMem = &cbData;
-
     if (FAILED(device->CreateBuffer(&bd, &initData, &cb))) return false;
 
     context->CSSetShader(gaussianBlurCS.Get(), nullptr, 0);
-
     ID3D11ShaderResourceView* srvs[] = {srvInput.Get()};
     context->CSSetShaderResources(0, 1, srvs);
-
     ID3D11UnorderedAccessView* uavs[] = {uavOutput.Get()};
     context->CSSetUnorderedAccessViews(0, 1, uavs, nullptr);
-
     ID3D11Buffer* cbs[] = {cb.Get()};
     context->CSSetConstantBuffers(0, 1, cbs);
 
-    context->Dispatch((desc.Width + 15) / 16, (desc.Height + 15) / 16, 1);
+    context->Dispatch((outputWidth + 15) / 16, (outputHeight + 15) / 16, 1);
 
     ID3D11ShaderResourceView* nullSRV[] = {nullptr};
     ID3D11UnorderedAccessView* nullUAV[] = {nullptr};
     ID3D11Buffer* nullCB[] = {nullptr};
-
     context->CSSetShader(nullptr, nullptr, 0);
     context->CSSetShaderResources(0, 1, nullSRV);
     context->CSSetUnorderedAccessViews(0, 1, nullUAV, nullptr);
