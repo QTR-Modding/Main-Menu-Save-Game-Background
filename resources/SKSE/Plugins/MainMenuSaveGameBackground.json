@@ -1,15 +1,12 @@
 {
-  "BMultiply": 1.0,
-  "BlurRadius": 12.5,
-  "Brightness": 1.0,
-  "Contrast": 1.0,
-  "GMultiply": 1.0,
-  "RMultiply": 1.0,
-  "Saturation": 1.0,
-  "ScreenPoolingIntervalInMilliseconds": 1000,
-  "UpdateOnAutoSave": false,
-  "UpdateOnManualSave": true,
-  "UpdateOnOtherSave": true,
-  "UpdateOnQuickSave": true,
-  "VignetteStrength": 1.0
+    "BlurRadius": 12.5,
+    "Brightness": 1.0,
+    "Contrast": 1.0,
+    "Saturation": 1.0,
+    "ScreenPoolingIntervalInMilliseconds": 1000,
+    "UpdateOnAutoSave": false,
+    "UpdateOnManualSave": true,
+    "UpdateOnOtherSave": true,
+    "UpdateOnQuickSave": true,
+    "VignetteStrength": 1.0
 }

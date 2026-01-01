@@ -17,5 +17,6 @@ void MainMenuManager::OnRenderUI() {
 }
 
 void MainMenuManager::OnSaveGame() {
-    Graphics::SaveCurrentFrameAsDDS(L".\\Data\\textures\\interface\\objects\\mainmenuwallpaper.dds");
+    Graphics::SaveCurrentFrameAsDDS(L".\\Data\\textures\\interface\\objects\\mainmenuwallpaper.dds", true);
+    Graphics::SaveCurrentFrameAsDDS(L".\\Data\\textures\\interface\\objects\\loadingscreenimage.dds", false);
 }

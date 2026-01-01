@@ -19,7 +19,7 @@ class Graphics {
 public:
     static void Install(IDXGISwapChain* swapChain, ID3D11Device* device, ID3D11DeviceContext* context);
     static void FetchTextureBuffer();
-    static bool SaveCurrentFrameAsDDS(const wchar_t* filename);
+    static bool SaveCurrentFrameAsDDS(const wchar_t* filename, bool postProcess);
     static void UpdatePostProcessedFrame();
     static ID3D11ShaderResourceView* GetPostProcessedFrame();
 };

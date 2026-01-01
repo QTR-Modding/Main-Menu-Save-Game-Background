@@ -210,7 +210,7 @@ ID3D11ShaderResourceView* Graphics::GetPostProcessedFrame() {
     return oldPostProcessedFrame;
 
 }
-bool Graphics::SaveCurrentFrameAsDDS(const wchar_t* filename) {
+bool Graphics::SaveCurrentFrameAsDDS(const wchar_t* filename, bool postProcess) {
 
     if (!oldFrame) return false;
 
@@ -224,9 +224,11 @@ bool Graphics::SaveCurrentFrameAsDDS(const wchar_t* filename) {
     auto tex2D = static_cast<ID3D11Texture2D*>(resource);
 
     ID3D11Texture2D* finalTex = tex2D;
-    ID3D11Texture2D* postProcessedTex = nullptr;
-    if (PostProcessTexture(tex2D, &postProcessedTex)) {
-        finalTex = postProcessedTex;
+    if (postProcess) {
+        ID3D11Texture2D* postProcessedTex = nullptr;
+        if (PostProcessTexture(tex2D, &postProcessedTex)) {
+            finalTex = postProcessedTex;
+        }
     }
 
     DirectX::ScratchImage image;
