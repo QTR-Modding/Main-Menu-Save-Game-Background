@@ -7,7 +7,7 @@
   "MCP.OutputImageEffects": "Effects that will be applied to the generated image",
   "MCP.BlurRadius": "Blur Radius: ",
   "MCP.Brightness": "Brightness: ",
-  "MCP.VignetteStrength": "VignetteStrength: ",
+  "MCP.VignetteStrength": "Vignette Strength: ",
   "MCP.Saturation": "Saturation: ",
   "MCP.Contrast": "Contrast: ",
   "MCP.Clear": "Clear",
