@@ -9,6 +9,15 @@ namespace Hooks {
         static inline REL::Relocation<decltype(thunk)> originalFunction;
     };
 
+    class LoadingScreenHook {
+    public:
+        static void Install();
+
+    private:
+        static int64_t thunk(int64_t a1, uint32_t a2);
+        static inline REL::Relocation<decltype(thunk)> originalFunction;
+    };
+
     struct CreateD3DAndSwapChain {
         static void thunk();
         static inline REL::Relocation<decltype(thunk)> originalFunction;
@@ -22,4 +31,5 @@ namespace Hooks {
     };
 
     void Install();
+    void DataLoaded();
 }

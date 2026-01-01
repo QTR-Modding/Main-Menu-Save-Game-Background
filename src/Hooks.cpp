@@ -85,4 +85,38 @@ void Hooks::Install() {
     SaveGameHook::Install();
     CreateD3DAndSwapChain::Install();
     RenderUIHook::Install();
+    LoadingScreenHook::Install();
+}
+
+
+
+void Hooks::LoadingScreenHook::Install() {
+    SKSE::AllocTrampoline(14);
+    auto& trampoline = SKSE::GetTrampoline();
+    originalFunction = trampoline.write_call<5>(REL::RelocationID(51048, 51929).address() + REL::Relocate(0x271, 0x176), thunk);
+}
+
+int64_t Hooks::LoadingScreenHook::thunk(int64_t a1, uint32_t a2) {
+    auto result = originalFunction(a1, a2);
+    auto id = RE::TESDataHandler::GetSingleton()->LookupFormID(0x800, "MainMenuSaveGameBackground.esp");
+    auto loadingScreen = RE::TESForm::LookupByID<RE::TESLoadScreen>(id);
+    if (!loadingScreen) return result;
+    const auto ui = RE::UI::GetSingleton();
+    if (!ui) return result;
+    auto loadingMenu = ui->GetMenu<RE::LoadingMenu>();
+    if (!loadingMenu) return result;
+    auto data = loadingMenu->GetRuntimeData();
+    auto list = data.loadScreens;
+    auto original = data.loadScreens[result];
+    if (original) {
+        loadingScreen->loadingText = original->loadingText;
+    }
+    for (auto i = 0; i < list.size(); i++) {
+        if (auto item = list[i]) {
+            if (item->GetFormID() == id) {
+                return i;
+            }
+        }
+    }
+    return result;
 }
