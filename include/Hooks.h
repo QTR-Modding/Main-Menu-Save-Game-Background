@@ -1,5 +1,15 @@
 #pragma once
 namespace Hooks {
+
+        class LoadGameHook {
+    public:
+        static void Install();
+
+    private:
+        static int32_t thunk(RE::BSWin32SaveDataSystemUtility* a1, char* fileName, void* a3);
+        static inline REL::Relocation<decltype(thunk)> originalFunction;
+    };
+
     class SaveGameHook {
     public:
         static void Install();

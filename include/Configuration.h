@@ -11,6 +11,9 @@ namespace Configuration {
     inline float Brightness = 1.0f;
     inline float Saturation = 1.0f;
     inline float Contrast = 1.0f;
+
+    inline bool ReplaceLoadingScreen = true;
+
     void Load();
     void Save();
 };

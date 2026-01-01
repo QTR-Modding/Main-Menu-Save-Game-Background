@@ -6,9 +6,35 @@
 #include "Graphics.h"
 #include "MainMenuManager.h"
 #include "Configuration.h"
+#include "SaveGame.h"
+#include "File.h"
 #define QUICK_SAVE_DEVICE_ID 4
 #define AUTO_SAVE_DEVICE_ID 3
 #define MANUAL_SAVE_DEVICE_ID 2
+
+#define LAST_SAVE_FILE_PATH ".\\Data\\SKSE\\Plugins\\MainMenuSaveGameBackgroundLastSave.txt"
+
+
+bool isLoadingLastSave = false;
+
+int32_t Hooks::LoadGameHook::thunk(RE::BSWin32SaveDataSystemUtility* util, char* fileName, void* unknown) {
+
+    std::string contents;
+    if (File::ReadString(LAST_SAVE_FILE_PATH, contents) && contents == SaveGame::LowerTrimESS(fileName)) {
+        isLoadingLastSave = true;
+    } else {
+        isLoadingLastSave = false;
+    }
+
+    return originalFunction(util, fileName, unknown);
+}
+
+void Hooks::LoadGameHook::Install() {
+    SKSE::AllocTrampoline(14);
+    auto& trampoline = SKSE::GetTrampoline();
+    originalFunction = trampoline.write_call<5>(REL::RelocationID(34677, 35600).address() + REL::Relocate(0xab, 0xab), thunk);
+}
+
 
 char* Hooks::SaveGameHook::thunk(RE::BGSSaveLoadManager* manager, void* a2, char* fileName, void* a4, int32_t deviceId) {
 
@@ -29,7 +55,8 @@ char* Hooks::SaveGameHook::thunk(RE::BGSSaveLoadManager* manager, void* a2, char
             MainMenuManager::OnSaveGame();
         }
     }
-
+    
+    File::WriteString(LAST_SAVE_FILE_PATH, SaveGame::LowerTrimESS(fileName));
     return originalFunction(manager, a2, fileName, a4, deviceId);
 }
 
@@ -83,6 +110,7 @@ void Hooks::RenderUIHook::Install() {
 
 void Hooks::Install() {
     SaveGameHook::Install();
+    LoadGameHook::Install();
     CreateD3DAndSwapChain::Install();
     RenderUIHook::Install();
     LoadingScreenHook::Install();
@@ -107,15 +135,22 @@ int64_t Hooks::LoadingScreenHook::thunk(int64_t a1, uint32_t a2) {
     if (!loadingMenu) return result;
     auto data = loadingMenu->GetRuntimeData();
     auto list = data.loadScreens;
-    auto original = data.loadScreens[result];
-    if (original) {
-        loadingScreen->loadingText = original->loadingText;
-    }
+
     for (auto i = 0; i < list.size(); i++) {
         if (auto item = list[i]) {
             if (item->GetFormID() == id) {
-                return i;
+                if (result == id) {
+                    result = 0;
+                }
+                if (Configuration::ReplaceLoadingScreen && isLoadingLastSave) {
+                    auto original = data.loadScreens[result];
+                    if (original) {
+                        loadingScreen->loadingText = original->loadingText;
+                    }
+                    return i;
+                }
             }
+
         }
     }
     return result;
