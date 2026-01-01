@@ -30,6 +30,10 @@ void Configuration::Load() {
         UpdateOnOtherSave = j["UpdateOnOtherSave"];
         logger::info("UpdateOnOtherSave: {}", UpdateOnOtherSave);
     }
+    if (j.contains("ReplaceLoadingScreenOnLastSaveLoad")) {
+        ReplaceLoadingScreenOnLastSaveLoad = j["ReplaceLoadingScreenOnLastSaveLoad"];
+        logger::info("ReplaceLoadingScreenOnLastSaveLoad: {}", ReplaceLoadingScreenOnLastSaveLoad);
+    }
     if (j.contains("BlurRadius")) {
         BlurRadius = j["BlurRadius"];
         logger::info("BlurRadius: {}", BlurRadius);
@@ -61,6 +65,7 @@ void Configuration::Save() {
     j["UpdateOnQuickSave"] = UpdateOnQuickSave;
     j["UpdateOnManualSave"] = UpdateOnManualSave;
     j["UpdateOnOtherSave"] = UpdateOnOtherSave;
+    j["ReplaceLoadingScreenOnLastSaveLoad"] = ReplaceLoadingScreenOnLastSaveLoad;
     j["BlurRadius"] = BlurRadius;
     j["VignetteStrength"] = VignetteStrength;
     j["Brightness"] = Brightness;

@@ -143,7 +143,7 @@ int64_t Hooks::LoadingScreenHook::thunk(int64_t a1, uint32_t a2) {
                 if (result == dynamicLoadingScreenId) {
                     result = 0;
                 }
-                if (Configuration::ReplaceLoadingScreen && isLoadingLastSave) {
+                if (Configuration::ReplaceLoadingScreenOnLastSaveLoad && isLoadingLastSave) {
                     auto original = data.loadScreens[result];
                     if (original) {
                         dynamicLoadingScreen->loadingText = original->loadingText;

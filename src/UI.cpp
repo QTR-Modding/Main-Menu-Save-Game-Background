@@ -27,6 +27,10 @@ void __stdcall UI::Config::Render() {
     if (ImGuiMCPComponents::ToggleButton(Translations::Get("MCP.UpdateOnOtherSave"), &Configuration::UpdateOnOtherSave)) {
         Configuration::Save();
     }
+    ImGuiMCP::Text(Translations::Get("MCP.LoadingScreen"));
+    if (ImGuiMCPComponents::ToggleButton(Translations::Get("MCP.ReplaceLoadingScreenOnLastSaveLoad"), &Configuration::ReplaceLoadingScreenOnLastSaveLoad)) {
+        Configuration::Save();
+    }
 
 }
 

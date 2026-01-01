@@ -13,5 +13,7 @@
   "MCP.Clear": "Clear",
   "MCP.Reset": "Reset",
   "MCP.Config": "Config",
-  "MCP.PostProcess": "Post Process"
+  "MCP.PostProcess": "Post Process",
+  "MCP.LoadingScreen": "Loading screen configuration:",
+  "MCP.ReplaceLoadingScreenOnLastSaveLoad": "Replace Loading Screen on Last Save Load"
 }
