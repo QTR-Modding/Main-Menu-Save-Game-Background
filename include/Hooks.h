@@ -41,5 +41,4 @@ namespace Hooks {
     };
 
     void Install();
-    void DataLoaded();
 }
