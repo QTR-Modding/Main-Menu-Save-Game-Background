@@ -105,6 +105,24 @@ void __stdcall UI::Config::PostProcess() {
         }
     }
 
+        {
+        if (ImGuiMCP::Button(std::format("{}##SaturationClear", Translations::Get("MCP.Clear")).c_str())) {
+            Configuration::Saturation = 1.0f;
+            Configuration::Save();
+        }
+        ImGuiMCP::SameLine();
+        if (ImGuiMCP::Button(std::format("{}##SaturationReset", Translations::Get("MCP.Reset")).c_str())) {
+            Configuration::Saturation = 1.0f;
+            Configuration::Save();
+        }
+        ImGuiMCP::SameLine();
+        ImGuiMCP::Text(Translations::Get("MCP.Saturation"));
+        ImGuiMCP::SameLine();
+        if (ImGuiMCP::InputFloat("##Saturation", &Configuration::Saturation)) {
+            Configuration::Save();
+        }
+    }
+
     if (ImGuiMCP::Button("Preview")) {
         Graphics::UpdatePostProcessedFrame();
     }
