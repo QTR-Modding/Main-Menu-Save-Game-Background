@@ -23,6 +23,13 @@ namespace SKSEMenuFramework {
     }
 
     namespace Model {
+
+        enum EventType {
+		    kNone = 0,
+		    kOpenMenu = 1,
+		    kCloseMenu = 2
+	    };
+
         namespace Internal {
             template <class T>
             T GetFunction(LPCSTR name) {
@@ -40,6 +47,12 @@ namespace SKSEMenuFramework {
         typedef void(__stdcall* RenderFunction)();
         typedef bool(__stdcall* InputEventCallback)(RE::InputEvent*);
         typedef void(__stdcall* HudElementCallback)();
+
+        typedef void(__stdcall* EventCallback)(EventType eventType);
+        
+        using RegisterEventFuction = int64_t (*)(EventCallback callback);
+        using UnregisterEventFuction = void (*)(int64_t id);
+
         using ActionFunction = void (*)();
         using AddWindowFunction = Model::WindowInterface* (*)(RenderFunction);
         using AddSectionItemFunction = void (*)(const char* path, RenderFunction rendererFunction);
@@ -66,6 +79,24 @@ namespace SKSEMenuFramework {
             }
             ~InputEvent() {
                 static auto func = Internal::GetFunction<UnregisterInputEventFuction>("UnregisterInputEvent");
+                if (func) {
+                    func(id);
+                }
+            }
+        };
+
+        class Event {
+            int64_t id;
+
+        public:
+            Event(EventCallback callback) {
+                static auto func = Internal::GetFunction<RegisterEventFuction>("RegisterEvent");
+                if (func) {
+                    id = func(callback);
+                }
+            }
+            ~Event() {
+                static auto func = Internal::GetFunction<UnregisterEventFuction>("UnregisterEvent");
                 if (func) {
                     func(id);
                 }
@@ -4829,9 +4860,9 @@ namespace ImGuiMCP {
         return func(label, data_type, p_data, components, p_step, p_step_fast, format, flags);
     }
     inline bool ColorEdit3(const char* label, float col[3], ImGuiColorEditFlags flags = 0) {
-        using func_t = bool (*)(const char*, float, ImGuiColorEditFlags);
+        using func_t = bool (*)(const char*, float[3], ImGuiColorEditFlags);
         func_t func = reinterpret_cast<func_t>(GetProcAddress(menuFramework, "igColorEdit3"));
-        return func(label, col[3], flags);
+        return func(label, col, flags);
     }
     inline bool ColorEdit4(const char* label, float col[4], ImGuiColorEditFlags flags = 0) {
         using func_t = bool (*)(const char*, float[4], ImGuiColorEditFlags);
