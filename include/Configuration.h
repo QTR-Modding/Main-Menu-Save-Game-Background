@@ -12,7 +12,8 @@ namespace Configuration {
     inline float Saturation = 1.0f;
     inline float Contrast = 1.0f;
 
-    inline bool ReplaceLoadingScreenOnLastSaveLoad = true;
+    inline bool ReplaceLoadingScreenMesh = true;
+    inline bool OnlyReplaceLoadingScreenMeshFromMainMenu = true;
 
     void Load();
     void Save();

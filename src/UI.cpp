@@ -90,7 +90,10 @@ void __stdcall UI::Config::Render() {
         Configuration::Save();
     }
     ImGuiMCP::Text(Translations::Get("MCP.LoadingScreen"));
-    if (ImGuiMCPComponents::ToggleButton(Translations::Get("MCP.ReplaceLoadingScreenOnLastSaveLoad"), &Configuration::ReplaceLoadingScreenOnLastSaveLoad)) {
+    if (ImGuiMCPComponents::ToggleButton(Translations::Get("MCP.ReplaceLoadingScreenMesh"), &Configuration::ReplaceLoadingScreenMesh)) {
+        Configuration::Save();
+    }
+    if (ImGuiMCPComponents::ToggleButton(Translations::Get("MCP.OnlyReplaceLoadingScreenMeshFromMainMenu"), &Configuration::OnlyReplaceLoadingScreenMeshFromMainMenu)) {
         Configuration::Save();
     }
 

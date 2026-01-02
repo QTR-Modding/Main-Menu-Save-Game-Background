@@ -19,11 +19,13 @@
 
 
 bool isLoadingLastSave = false;
+bool isLoadingFromMainMenu = false;
 
 int32_t Hooks::LoadGameHook::thunk(RE::BSWin32SaveDataSystemUtility* util, char* fileName, void* unknown) {
 
     std::string contents;
-    if (File::ReadString(LAST_SAVE_FILE_PATH, contents) && contents == SaveGame::LowerTrimESS(fileName)) {
+    std::string loweredFileName = SaveGame::LowerTrimESS(fileName);
+    if (File::ReadString(LAST_SAVE_FILE_PATH, contents) && contents == loweredFileName) {
         isLoadingLastSave = true;
     } else {
         isLoadingLastSave = false;
@@ -44,23 +46,29 @@ char* Hooks::SaveGameHook::thunk(RE::BGSSaveLoadManager* manager, void* a2, char
     if (deviceId == QUICK_SAVE_DEVICE_ID) {
         if (Configuration::UpdateOnQuickSave) {
             MainMenuManager::OnSaveGame();
+            File::WriteString(LAST_SAVE_FILE_PATH, SaveGame::LowerTrimESS(fileName));
+            SKSEMenuFramework::DisposeTexture(TEXTURE_PATH);
         }
     } else if (deviceId == AUTO_SAVE_DEVICE_ID) {
         if (Configuration::UpdateOnAutoSave) {
             MainMenuManager::OnSaveGame();
+            File::WriteString(LAST_SAVE_FILE_PATH, SaveGame::LowerTrimESS(fileName));
+            SKSEMenuFramework::DisposeTexture(TEXTURE_PATH);
         }
     } else if (deviceId == MANUAL_SAVE_DEVICE_ID) {
         if (Configuration::UpdateOnManualSave) {
             MainMenuManager::OnSaveGame();
+            File::WriteString(LAST_SAVE_FILE_PATH, SaveGame::LowerTrimESS(fileName));
+            SKSEMenuFramework::DisposeTexture(TEXTURE_PATH);
         }
     } else {
         if (Configuration::UpdateOnOtherSave) {
             MainMenuManager::OnSaveGame();
+            File::WriteString(LAST_SAVE_FILE_PATH, SaveGame::LowerTrimESS(fileName));
+            SKSEMenuFramework::DisposeTexture(TEXTURE_PATH);
         }
     }
     
-    File::WriteString(LAST_SAVE_FILE_PATH, SaveGame::LowerTrimESS(fileName));
-    SKSEMenuFramework::DisposeTexture(TEXTURE_PATH);
     return originalFunction(manager, a2, fileName, a4, deviceId);
 }
 
@@ -118,7 +126,8 @@ void Hooks::Install() {
     CreateD3DAndSwapChain::Install();
     RenderUIHook::Install();
     LoadingScreenHook::Install();
-    LoadingMenuHideHook::Install();
+    AddMessageLoadingMenuHide::Install();
+    AddMessageMainMenuShowHook::Install();
 }
 
 
@@ -130,6 +139,7 @@ void Hooks::LoadingScreenHook::Install() {
 }
 
 int64_t Hooks::LoadingScreenHook::thunk(int64_t a1, uint32_t a2) {
+    auto sholdReplaceLoadingScreen = !Configuration::OnlyReplaceLoadingScreenMeshFromMainMenu || isLoadingFromMainMenu;
     auto result = originalFunction(a1, a2);
     auto dataLoader = RE::TESDataHandler::GetSingleton();
     if (!dataLoader) return result;
@@ -148,7 +158,7 @@ int64_t Hooks::LoadingScreenHook::thunk(int64_t a1, uint32_t a2) {
                 if (result == dynamicLoadingScreenId) {
                     result = 0;
                 }
-                if (Configuration::ReplaceLoadingScreenOnLastSaveLoad && isLoadingLastSave) {
+                if (Configuration::ReplaceLoadingScreenMesh && isLoadingLastSave && sholdReplaceLoadingScreen) {
                     auto original = data.loadScreens[result];
                     if (original) {
                         dynamicLoadingScreen->loadingText = original->loadingText;
@@ -162,19 +172,32 @@ int64_t Hooks::LoadingScreenHook::thunk(int64_t a1, uint32_t a2) {
     return result;
 }
 
-void Hooks::LoadingMenuHideHook::Install() {
+void Hooks::AddMessageLoadingMenuHide::Install() {
     SKSE::AllocTrampoline(14);
     auto& trampoline = SKSE::GetTrampoline();
     originalFunction = trampoline.write_call<5>(REL::RelocationID(13214, 13363).address() + REL::Relocate(0x211, 0x211), thunk);
 }
 
-
-
-void Hooks::LoadingMenuHideHook::thunk(RE::UIMessageQueue* queue, const RE::BSFixedString& a_menuName, RE::UI_MESSAGE_TYPE a_type, RE::IUIMessageData* a_data) { 
+void Hooks::AddMessageLoadingMenuHide::thunk(RE::UIMessageQueue* queue, const RE::BSFixedString& a_menuName, RE::UI_MESSAGE_TYPE a_type, RE::IUIMessageData* a_data) { 
     originalFunction(queue, a_menuName, a_type, a_data);
-    if (isLoadingLastSave) {
+    auto sholdReplaceLoadingScreen = !Configuration::OnlyReplaceLoadingScreenMeshFromMainMenu || isLoadingFromMainMenu;
+    if (Configuration::ReplaceLoadingScreenMesh && isLoadingLastSave && sholdReplaceLoadingScreen) {
+        isLoadingFromMainMenu = false;
         isLoadingLastSave = false;
         MainMenuManager::OverlayAlpha = 1.0;
         RE::UIMessageQueue::GetSingleton()->AddMessage(RE::FaderMenu::MENU_NAME, RE::UI_MESSAGE_TYPE::kHide, nullptr);
     }
+}
+
+void Hooks::AddMessageMainMenuShowHook::thunk(RE::UIMessageQueue* queue, const RE::BSFixedString& a_menuName, RE::UI_MESSAGE_TYPE a_type, RE::IUIMessageData* a_data) {
+    if (a_menuName == RE::MainMenu::MENU_NAME && a_type == RE::UI_MESSAGE_TYPE::kShow) {
+        isLoadingFromMainMenu = true;
+    }
+    originalFunction(queue, a_menuName, a_type, a_data);
+}
+
+void Hooks::AddMessageMainMenuShowHook::Install() {
+    SKSE::AllocTrampoline(14);
+    auto& trampoline = SKSE::GetTrampoline();
+    originalFunction = trampoline.write_call<5>(REL::RelocationID(80077, 82180).address() + REL::Relocate(0x9b, 0x7b), thunk);
 }

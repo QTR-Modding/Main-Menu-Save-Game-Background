@@ -1,10 +1,10 @@
 {
-  "MCP.UpdateDescription": "When should the main menu image be updated?",
-  "MCP.UpdateOnAutoSave": "Update on auto save",
-  "MCP.UpdateOnQuickSave": "Update on quick save",
-  "MCP.UpdateOnManualSave": "Update on manual save",
-  "MCP.UpdateOnOtherSave": "Update on other save",
-  "MCP.OutputImageEffects": "Effects that will be applied to the generated image",
+  "MCP.UpdateDescription": "When Should The Main Menu Image Be Updated?",
+  "MCP.UpdateOnAutoSave": "Update on Auto Save",
+  "MCP.UpdateOnQuickSave": "Update on Quick Save",
+  "MCP.UpdateOnManualSave": "Update on Manual Save",
+  "MCP.UpdateOnOtherSave": "Update On Other Save",
+  "MCP.OutputImageEffects": "Effects That Will Be Applied To The Generated Image",
   "MCP.BlurRadius": "Blur Radius: ",
   "MCP.Brightness": "Brightness: ",
   "MCP.VignetteStrength": "Vignette Strength: ",
@@ -14,6 +14,7 @@
   "MCP.Reset": "Reset",
   "MCP.Config": "Config",
   "MCP.PostProcess": "Post Process",
-  "MCP.LoadingScreen": "Loading screen configuration:",
-  "MCP.ReplaceLoadingScreenOnLastSaveLoad": "Replace Loading Screen on Last Save Load"
+  "MCP.LoadingScreen": "Loading Screen Configuration:",
+  "MCP.ReplaceLoadingScreenMesh": "Replace Loading Screen Mesh",
+  "MCP.OnlyReplaceLoadingScreenMeshFromMainMenu": "Only Replace Loading Screen Mesh From The Main Menu"
 }
