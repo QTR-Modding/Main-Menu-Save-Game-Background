@@ -25,9 +25,7 @@ int32_t Hooks::LoadGameHook::thunk(RE::BSWin32SaveDataSystemUtility* util, char*
     std::string contents;
     if (File::ReadString(LAST_SAVE_FILE_PATH, contents) && contents == SaveGame::LowerTrimESS(fileName)) {
         isLoadingLastSave = true;
-        Menu::SetMenuAlpha<RE::FaderMenu>(0.0f);
     } else {
-        Menu::SetMenuAlpha<RE::FaderMenu>(1.f);
         isLoadingLastSave = false;
     }
 
@@ -177,5 +175,6 @@ void Hooks::LoadingMenuHideHook::thunk(RE::UIMessageQueue* queue, const RE::BSFi
     if (isLoadingLastSave) {
         isLoadingLastSave = false;
         MainMenuManager::OverlayAlpha = 1.0;
+        RE::UIMessageQueue::GetSingleton()->AddMessage(RE::FaderMenu::MENU_NAME, RE::UI_MESSAGE_TYPE::kHide, nullptr);
     }
 }
