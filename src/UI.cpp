@@ -13,13 +13,24 @@ void UI::Register() {
     SKSEMenuFramework::AddHudElement(UI::Config::Hud);
 }
 
+
 void __stdcall UI::Config::Hud() {
-    if (!MainMenuManager::RenderOverlay) {
+
+
+    if (MainMenuManager::OverlayAlpha <= 0) {
         return;
     }
-
-    auto image = reinterpret_cast<ID3D11ShaderResourceView*>(SKSEMenuFramework::LoadTexture(".\\DATA\\textures\\interface\\objects\\loadingscreenimage.dds"));
+    auto image = reinterpret_cast<ID3D11ShaderResourceView*>(SKSEMenuFramework::LoadTexture(TEXTURE_PATH));
     if (!image) return;
+
+    float g_deltaTime = *(float*)REL::RelocationID(523660, 410199).address();
+
+    float fadeDuration = 0.5f;
+    MainMenuManager::OverlayAlpha -= g_deltaTime / fadeDuration;
+
+
+    if (MainMenuManager::OverlayAlpha < 0.0f) MainMenuManager::OverlayAlpha = 0.0f;
+
 
     float screenW = ImGuiMCP::GetIO()->DisplaySize.x;
     float screenH = ImGuiMCP::GetIO()->DisplaySize.y;
@@ -58,7 +69,8 @@ void __stdcall UI::Config::Hud() {
     float y = (screenH - drawH) * 0.5f;
 
     auto list = ImGuiMCP::GetForegroundDrawList();
-    ImGuiMCP::ImDrawListManager::AddImage(list, image, ImGuiMCP::ImVec2{x, y}, ImGuiMCP::ImVec2{x + drawW, y + drawH}, ImGuiMCP::ImVec2{0, 0}, ImGuiMCP::ImVec2{1, 1}, IM_COL32_WHITE);
+    ImGuiMCP::ImU32 color = IM_COL32(255, 255, 255, (int)(MainMenuManager::OverlayAlpha * 255));
+    ImGuiMCP::ImDrawListManager::AddImage(list, image, ImGuiMCP::ImVec2{x, y}, ImGuiMCP::ImVec2{x + drawW, y + drawH}, ImGuiMCP::ImVec2{0, 0}, ImGuiMCP::ImVec2{1, 1}, color);
 }
 
 

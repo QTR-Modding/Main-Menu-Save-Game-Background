@@ -1,7 +1,7 @@
 #pragma once
 
 namespace MainMenuManager {
-    inline bool RenderOverlay = false;
+    inline float OverlayAlpha = 0.0;
     void OnRenderUI();
     void OnSaveGame();
 }

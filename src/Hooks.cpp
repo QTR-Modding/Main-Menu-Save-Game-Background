@@ -9,6 +9,8 @@
 #include "SaveGame.h"
 #include "File.h"
 #include "Menu.h"
+#include "UI.h"
+
 #define QUICK_SAVE_DEVICE_ID 4
 #define AUTO_SAVE_DEVICE_ID 3
 #define MANUAL_SAVE_DEVICE_ID 2
@@ -60,6 +62,7 @@ char* Hooks::SaveGameHook::thunk(RE::BGSSaveLoadManager* manager, void* a2, char
     }
     
     File::WriteString(LAST_SAVE_FILE_PATH, SaveGame::LowerTrimESS(fileName));
+    SKSEMenuFramework::DisposeTexture(TEXTURE_PATH);
     return originalFunction(manager, a2, fileName, a4, deviceId);
 }
 
@@ -173,9 +176,6 @@ void Hooks::LoadingMenuHideHook::thunk(RE::UIMessageQueue* queue, const RE::BSFi
     originalFunction(queue, a_menuName, a_type, a_data);
     if (isLoadingLastSave) {
         isLoadingLastSave = false;
-        MainMenuManager::RenderOverlay = true;
-        SKSE::GetTaskInterface()->AddTask([](){
-            MainMenuManager::RenderOverlay = false;
-        });
+        MainMenuManager::OverlayAlpha = 1.0;
     }
 }

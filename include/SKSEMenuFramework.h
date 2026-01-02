@@ -52,6 +52,7 @@ namespace SKSEMenuFramework {
         using IsAnyBlockingWindowOpenedFuction = bool (*)();
         using SetWindowsPauseGameFuction = void (*)(bool pause);
         using LoadTextureFuction = ImGuiMCP::ImTextureID (*)(const char* texturePath, ImGuiMCP::ImVec2* size);
+        using DisposeTextureFuction = void (*)(const char* texturePath);
 
         class InputEvent {
             uint64_t id;
@@ -131,6 +132,14 @@ namespace SKSEMenuFramework {
             return func(texturePath.c_str(), &size);
         }
         return 0;
+    }
+
+    inline void DisposeTexture(std::string texturePath) {
+        static auto func = Model::Internal::GetFunction<Model::DisposeTextureFuction>("DisposeTexture");
+        if (func) {
+            return func(texturePath.c_str());
+        }
+        return;
     }
 
     inline void SetSection(std::string key) { Model::Internal::key = key; }

@@ -1,6 +1,8 @@
 #pragma once
 #include "SKSEMenuFramework.h"
 #include "Configuration.h"
+#define TEXTURE_PATH ".\\DATA\\textures\\interface\\objects\\mainmenuwallpaper.dds"
+
 namespace UI {
     void Register();
     namespace Config {
