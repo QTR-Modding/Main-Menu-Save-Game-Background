@@ -2,6 +2,7 @@
 #include "Configuration.h"
 #include "Translations.h"
 #include "Graphics.h"
+#include "MainMenuManager.h"
 void UI::Register() {
     if (!SKSEMenuFramework::IsInstalled()) {
         return;
@@ -9,6 +10,55 @@ void UI::Register() {
     SKSEMenuFramework::SetSection(MOD_NAME);
     SKSEMenuFramework::AddSectionItem(Translations::Get("MCP.Config"), Config::Render);
     SKSEMenuFramework::AddSectionItem(Translations::Get("MCP.PostProcess"), Config::PostProcess);
+    SKSEMenuFramework::AddHudElement(UI::Config::Hud);
+}
+
+void __stdcall UI::Config::Hud() {
+    if (!MainMenuManager::RenderOverlay) {
+        return;
+    }
+
+    auto image = reinterpret_cast<ID3D11ShaderResourceView*>(SKSEMenuFramework::LoadTexture(".\\DATA\\textures\\interface\\objects\\loadingscreenimage.dds"));
+    if (!image) return;
+
+    float screenW = ImGuiMCP::GetIO()->DisplaySize.x;
+    float screenH = ImGuiMCP::GetIO()->DisplaySize.y;
+
+
+    ID3D11Resource* res = nullptr;
+    image->GetResource(&res);
+
+    ID3D11Texture2D* tex = nullptr;
+    res->QueryInterface(__uuidof(ID3D11Texture2D), (void**)&tex);
+
+    D3D11_TEXTURE2D_DESC desc;
+    tex->GetDesc(&desc);
+
+    res->Release();
+    tex->Release();
+
+    float imageW = float(desc.Width);
+    float imageH = float(desc.Height);
+
+    float screenAspect = screenW / screenH;
+    float imageAspect = imageW / imageH;
+
+    float drawW;
+    float drawH;
+
+    if (imageAspect > screenAspect) {
+        drawW = screenW;
+        drawH = screenW / imageAspect;
+    } else {
+        drawH = screenH;
+        drawW = screenH * imageAspect;
+    }
+
+    float x = (screenW - drawW) * 0.5f;
+    float y = (screenH - drawH) * 0.5f;
+
+    auto list = ImGuiMCP::GetForegroundDrawList();
+    ImGuiMCP::ImDrawListManager::AddImage(list, image, ImGuiMCP::ImVec2{x, y}, ImGuiMCP::ImVec2{x + drawW, y + drawH}, ImGuiMCP::ImVec2{0, 0}, ImGuiMCP::ImVec2{1, 1}, IM_COL32_WHITE);
 }
 
 

@@ -8,6 +8,7 @@
 #include "Configuration.h"
 #include "SaveGame.h"
 #include "File.h"
+#include "Menu.h"
 #define QUICK_SAVE_DEVICE_ID 4
 #define AUTO_SAVE_DEVICE_ID 3
 #define MANUAL_SAVE_DEVICE_ID 2
@@ -22,7 +23,9 @@ int32_t Hooks::LoadGameHook::thunk(RE::BSWin32SaveDataSystemUtility* util, char*
     std::string contents;
     if (File::ReadString(LAST_SAVE_FILE_PATH, contents) && contents == SaveGame::LowerTrimESS(fileName)) {
         isLoadingLastSave = true;
+        Menu::SetMenuAlpha<RE::FaderMenu>(0.0f);
     } else {
+        Menu::SetMenuAlpha<RE::FaderMenu>(1.f);
         isLoadingLastSave = false;
     }
 
@@ -114,6 +117,7 @@ void Hooks::Install() {
     CreateD3DAndSwapChain::Install();
     RenderUIHook::Install();
     LoadingScreenHook::Install();
+    LoadingMenuHideHook::Install();
 }
 
 
@@ -155,4 +159,23 @@ int64_t Hooks::LoadingScreenHook::thunk(int64_t a1, uint32_t a2) {
         }
     }
     return result;
+}
+
+void Hooks::LoadingMenuHideHook::Install() {
+    SKSE::AllocTrampoline(14);
+    auto& trampoline = SKSE::GetTrampoline();
+    originalFunction = trampoline.write_call<5>(REL::RelocationID(13214, 13363).address() + REL::Relocate(0x211, 0x211), thunk);
+}
+
+
+
+void Hooks::LoadingMenuHideHook::thunk(RE::UIMessageQueue* queue, const RE::BSFixedString& a_menuName, RE::UI_MESSAGE_TYPE a_type, RE::IUIMessageData* a_data) { 
+    originalFunction(queue, a_menuName, a_type, a_data);
+    if (isLoadingLastSave) {
+        isLoadingLastSave = false;
+        MainMenuManager::RenderOverlay = true;
+        SKSE::GetTaskInterface()->AddTask([](){
+            MainMenuManager::RenderOverlay = false;
+        });
+    }
 }
