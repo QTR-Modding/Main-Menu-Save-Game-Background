@@ -176,8 +176,8 @@ void Hooks::AddMessageLoadingMenuHide::Install() {
 void Hooks::AddMessageLoadingMenuHide::thunk(RE::UIMessageQueue* queue, const RE::BSFixedString& a_menuName, RE::UI_MESSAGE_TYPE a_type, RE::IUIMessageData* a_data) { 
     originalFunction(queue, a_menuName, a_type, a_data);
     if (Configuration::ReplaceLoadingScreenMesh && isLoadingLastSave) {
-        isLoadingLastSave = false;
         MainMenuManager::OverlayAlpha = 1.0;
         RE::UIMessageQueue::GetSingleton()->AddMessage(RE::FaderMenu::MENU_NAME, RE::UI_MESSAGE_TYPE::kHide, nullptr);
     }
+    isLoadingLastSave = false;
 }
