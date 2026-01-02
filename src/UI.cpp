@@ -58,11 +58,11 @@ void __stdcall UI::Config::Hud() {
     float drawH;
 
     if (imageAspect > screenAspect) {
-        drawW = screenW;
-        drawH = screenW / imageAspect;
-    } else {
         drawH = screenH;
         drawW = screenH * imageAspect;
+    } else {
+        drawW = screenW;
+        drawH = screenW / imageAspect;
     }
 
     float x = (screenW - drawW) * 0.5f;
