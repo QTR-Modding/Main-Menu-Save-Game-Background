@@ -2,7 +2,6 @@
     "BlurRadius": 12.5,
     "Brightness": 1.0,
     "Contrast": 1.0,
-    "OnlyReplaceLoadingScreenFromTheMainMenu": true,
     "ReplaceLoadingScreenOnLastSaveLoad": true,
     "Saturation": 1.0,
     "ScreenPoolingIntervalInMilliseconds": 1000,

@@ -93,10 +93,6 @@ void __stdcall UI::Config::Render() {
     if (ImGuiMCPComponents::ToggleButton(Translations::Get("MCP.ReplaceLoadingScreenMesh"), &Configuration::ReplaceLoadingScreenMesh)) {
         Configuration::Save();
     }
-    if (ImGuiMCPComponents::ToggleButton(Translations::Get("MCP.OnlyReplaceLoadingScreenMeshFromMainMenu"), &Configuration::OnlyReplaceLoadingScreenMeshFromMainMenu)) {
-        Configuration::Save();
-    }
-
 }
 
 void __stdcall UI::Config::PostProcess() {

@@ -46,11 +46,5 @@ namespace Hooks {
         static void Install();
     };
 
-    struct AddMessageMainMenuShowHook {
-        static void thunk(RE::UIMessageQueue* queue, const RE::BSFixedString& a_menuName, RE::UI_MESSAGE_TYPE a_type, RE::IUIMessageData* a_data);
-        static inline REL::Relocation<decltype(thunk)> originalFunction;
-        static void Install();
-    };
-
     void Install();
 }

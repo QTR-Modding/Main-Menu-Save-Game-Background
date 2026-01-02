@@ -34,10 +34,6 @@ void Configuration::Load() {
         ReplaceLoadingScreenMesh = j["ReplaceLoadingScreenMesh"];
         logger::info("ReplaceLoadingScreenMesh: {}", ReplaceLoadingScreenMesh);
     }
-    if (j.contains("OnlyReplaceLoadingScreenMeshFromMainMenu")) {
-        OnlyReplaceLoadingScreenMeshFromMainMenu = j["OnlyReplaceLoadingScreenMeshFromMainMenu"];
-        logger::info("OnlyReplaceLoadingScreenMeshFromMainMenu: {}", OnlyReplaceLoadingScreenMeshFromMainMenu);
-    }
     if (j.contains("BlurRadius")) {
         BlurRadius = j["BlurRadius"];
         logger::info("BlurRadius: {}", BlurRadius);
@@ -70,7 +66,6 @@ void Configuration::Save() {
     j["UpdateOnManualSave"] = UpdateOnManualSave;
     j["UpdateOnOtherSave"] = UpdateOnOtherSave;
     j["ReplaceLoadingScreenMesh"] = ReplaceLoadingScreenMesh;
-    j["OnlyReplaceLoadingScreenMeshFromMainMenu"] = OnlyReplaceLoadingScreenMeshFromMainMenu;
     j["BlurRadius"] = BlurRadius;
     j["VignetteStrength"] = VignetteStrength;
     j["Brightness"] = Brightness;

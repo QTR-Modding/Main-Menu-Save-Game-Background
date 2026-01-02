@@ -13,7 +13,6 @@ namespace Configuration {
     inline float Contrast = 1.0f;
 
     inline bool ReplaceLoadingScreenMesh = true;
-    inline bool OnlyReplaceLoadingScreenMeshFromMainMenu = true;
 
     void Load();
     void Save();

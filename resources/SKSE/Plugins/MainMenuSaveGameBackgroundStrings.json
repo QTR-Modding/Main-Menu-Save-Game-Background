@@ -15,6 +15,5 @@
   "MCP.Config": "Config",
   "MCP.PostProcess": "Post Process",
   "MCP.LoadingScreen": "Loading Screen Configuration:",
-  "MCP.ReplaceLoadingScreenMesh": "Replace Loading Screen Mesh",
-  "MCP.OnlyReplaceLoadingScreenMeshFromMainMenu": "Only Replace Loading Screen Mesh From The Main Menu"
+  "MCP.ReplaceLoadingScreenMesh": "Replace Loading Screen Mesh"
 }
