@@ -78,7 +78,7 @@ bool Graphics::PostProcessTexture(ID3D11Texture2D* inputTex, ID3D11Texture2D** o
     // Calculate 16:9 output dimensions that fully contain the input
     UINT outputWidth, outputHeight;
     float inputAspect = (float)inputDesc.Width / (float)inputDesc.Height;
-    float targetAspect = 16.0f / 9.0f;
+    float targetAspect = 1;
 
     if (inputAspect > targetAspect) {
         // Input is wider than 16:9, match input width
