@@ -1,0 +1,94 @@
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/Cutleast/FOMOD-Creation-Kit/master/res/schemas/ModConfig5.0.xsd">
+    <moduleName>Main Menu Save Game Background</moduleName>
+    <moduleImage path="assets\Mod Image.png"/>
+    <requiredInstallFiles>
+        <folder source="files\Main Menu Save Game Background" destination="" alwaysInstall="false" installIfUsable="false" priority="0"/>
+    </requiredInstallFiles>
+    <installSteps order="Explicit">
+        <installStep name="Features">
+            <optionalFileGroups>
+                <group name="" type="SelectAny">
+                    <plugins>
+                        <plugin name="Skyrim Logo">
+                            <description>Displays the Skyrim logo. You should disable this feature if you do not want the logo or use a menu replacer that looks bad with the logo (for example, adds text over it).</description>
+                            <image path="assets\Skyrim Logo.png"/>
+                            <conditionFlags>
+                                <flag name="skyrimLogo">true</flag>
+                            </conditionFlags>
+                            <typeDescriptor>
+                                <type name="Recommended"/>
+                            </typeDescriptor>
+                        </plugin>
+                        <plugin name="Blur and Vignette">
+                            <description>Adds an effect to the captured backgrounds to make the menu prettier and easier to read.</description>
+                            <image path="assets\Blur and Vignette.png"/>
+                            <conditionFlags>
+                                <flag name="blurAndVignette">true</flag>
+                            </conditionFlags>
+                            <typeDescriptor>
+                                <type name="Recommended"/>
+                            </typeDescriptor>
+                        </plugin>
+                    </plugins>
+                </group>
+                            </optionalFileGroups>
+        </installStep>
+            <installStep name="System">
+            <optionalFileGroups>
+                <group name="" type="SelectAny">
+                    <plugins>
+                        <plugin name="Ultra-wide Logo">
+                            <description>Make the Skyrim logo half as big so it fits on ultra-wide monitors. It is highly recommended that you load both the ESP and meshes added by this mod after any mods that change the main menu or improve the Skyrim ultra-wide compatibility. This mod will only affect what it needs to work.</description>
+                            <image path="assets\Ultra-wide.png"/>
+                            <conditionFlags>
+                                <flag name="ultra-wide">true</flag>
+                            </conditionFlags>
+                            <typeDescriptor>
+								<dependencyType> 
+									<defaultType name="NotUsable"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<flagDependency flag="skyrimLogo" value="true"/> 
+											</dependencies> 
+											<type name="Optional"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+                            </typeDescriptor>
+                        </plugin>
+                    </plugins>
+                </group>
+            </optionalFileGroups>
+        </installStep>
+    </installSteps>
+    <conditionalFileInstalls>
+        <patterns>
+            <pattern>
+                <dependencies operator="And">
+                    <flagDependency flag="skyrimLogo" value="true"/>
+                </dependencies>
+                <files>
+                    <folder source="files\Main Menu Save Game Background Skyrim Logo" destination="" alwaysInstall="true" installIfUsable="false" priority="1"/>
+                </files>
+            </pattern>
+            <pattern>
+                <dependencies operator="And">
+                    <flagDependency flag="ultra-wide" value="true"/>
+                    <flagDependency flag="skyrimLogo" value="true"/>
+                </dependencies>
+                <files>
+                    <folder source="files\Main Menu Save Game Background Skyrim Logo Ultra-wide" destination="" alwaysInstall="true" installIfUsable="false" priority="2"/>
+                </files>
+            </pattern>
+            <pattern>
+                <dependencies operator="And">
+                    <flagDependency flag="blurAndVignette" value="true"/>
+                </dependencies>
+                <files>
+                    <folder source="files\Main Menu Save Game Background Blur and Vignette" destination="" alwaysInstall="true" installIfUsable="false" priority="1"/>
+                </files>
+            </pattern>
+        </patterns>
+    </conditionalFileInstalls>
+</config>

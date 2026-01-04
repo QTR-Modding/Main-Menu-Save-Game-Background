@@ -1,0 +1,8 @@
+<fomod xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/Cutleast/FOMOD-Creation-Kit/master/res/schemas/info.xsd">
+	<Name>Main Menu Save Game Background
+</Name>
+	<Author>SkyrimThiago</Author>
+	<Version>2.2</Version>
+	<Website>https://www.nexusmods.com/skyrimspecialedition/mods/168366</Website>
+	<Description>This mod replaces the main menu Skyrim logo, with a background image of the latest save game, that image is taken ignoring the HUD. The background will stay until the game is saved again even after closing the game.</Description>
+</fomod>

@@ -1,0 +1,13 @@
+{
+    "BlurRadius": 1.0,
+    "Brightness": 1.0,
+    "Contrast": 1.0,
+    "ReplaceLoadingScreenMesh": true,
+    "Saturation": 1.0,
+    "ScreenPoolingIntervalInMilliseconds": 1000,
+    "UpdateOnAutoSave": true,
+    "UpdateOnManualSave": true,
+    "UpdateOnOtherSave": true,
+    "UpdateOnQuickSave": true,
+    "VignetteStrength": 0.0
+}
