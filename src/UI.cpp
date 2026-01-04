@@ -3,6 +3,7 @@
 #include "Translations.h"
 #include "Graphics.h"
 #include "MainMenuManager.h"
+#include "imgui.h"
 void UI::Register() {
     if (!SKSEMenuFramework::IsInstalled()) {
         return;
@@ -10,7 +11,6 @@ void UI::Register() {
     SKSEMenuFramework::SetSection(MOD_NAME);
     SKSEMenuFramework::AddSectionItem(Translations::Get("MCP.Config"), Config::Render);
     SKSEMenuFramework::AddSectionItem(Translations::Get("MCP.PostProcess"), Config::PostProcess);
-    SKSEMenuFramework::AddHudElement(UI::Config::Hud);
 }
 
 
@@ -68,9 +68,9 @@ void __stdcall UI::Config::Hud() {
     float x = (screenW - drawW) * 0.5f;
     float y = (screenH - drawH) * 0.5f;
 
-    auto list = ImGuiMCP::GetForegroundDrawList();
-    ImGuiMCP::ImU32 color = IM_COL32(255, 255, 255, (int)(MainMenuManager::OverlayAlpha * 255));
-    ImGuiMCP::ImDrawListManager::AddImage(list, image, ImGuiMCP::ImVec2{x, y}, ImGuiMCP::ImVec2{x + drawW, y + drawH}, ImGuiMCP::ImVec2{0, 0}, ImGuiMCP::ImVec2{1, 1}, color);
+    auto list = ImGui::GetForegroundDrawList();
+    ImU32 color = IM_COL32(255, 255, 255, (int)(MainMenuManager::OverlayAlpha * 255));
+    list->AddImage(image, ImVec2{x, y}, ImVec2{x + drawW, y + drawH}, ImVec2{0, 0}, ImVec2{1, 1}, color);
 }
 
 

@@ -10,6 +10,9 @@
 #include "File.h"
 #include "Menu.h"
 #include "UI.h"
+#include "imgui.h"
+#include "imgui_impl_dx11.h"
+#include "imgui_impl_win32.h"
 
 #define QUICK_SAVE_DEVICE_ID 4
 #define AUTO_SAVE_DEVICE_ID 3
@@ -98,6 +101,31 @@ void Hooks::CreateD3DAndSwapChain::thunk() {
         auto context = reinterpret_cast<ID3D11DeviceContext*>(data.context);
 
         Graphics::Install(swapChain, device, context);
+
+        SKSE::log::info("Initializing ImGui...");
+
+        ImGui::CreateContext();
+
+        auto& io = ImGui::GetIO();
+        io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+        io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
+        io.ConfigFlags |= ImGuiConfigFlags_NoMouseCursorChange;
+        io.IniFilename = nullptr;
+        io.ConfigWindowsMoveFromTitleBarOnly = true;
+
+        if (!ImGui_ImplWin32_Init(desc.OutputWindow)) {
+            SKSE::log::error("ImGui initialization failed (Win32)");
+            return;
+        }
+
+        if (!ImGui_ImplDX11_Init(device, context)) {
+            SKSE::log::error("ImGui initialization failed (DX11)");
+            return;
+        }
+
+        SKSE::log::info("ImGui initialized.");
+
+        io.Fonts->Build();
     }
 }
 
@@ -126,6 +154,7 @@ void Hooks::Install() {
     RenderUIHook::Install();
     LoadingScreenHook::Install();
     AddMessageLoadingMenuHide::Install();
+    DXGIPresentHook::install();
 }
 
 void Hooks::LoadingScreenHook::Install() {
@@ -180,4 +209,30 @@ void Hooks::AddMessageLoadingMenuHide::thunk(RE::UIMessageQueue* queue, const RE
         RE::UIMessageQueue::GetSingleton()->AddMessage(RE::FaderMenu::MENU_NAME, RE::UI_MESSAGE_TYPE::kHide, nullptr);
     }
     isLoadingLastSave = false;
+}
+
+void Hooks::DXGIPresentHook::install() {
+    SKSE::AllocTrampoline(14);
+    auto& trampoline = SKSE::GetTrampoline();
+    originalFunction = trampoline.write_call<5>(REL::RelocationID(75461, 77246, 75461).address() + REL::Relocate(0x9, 0x9, 0x15), thunk);
+}
+
+void Hooks::DXGIPresentHook::thunk(std::uint32_t a_timer) {
+    originalFunction(a_timer);
+
+    ImGui_ImplDX11_NewFrame();
+    ImGui_ImplWin32_NewFrame();
+    {
+        // trick imgui into rendering at game's real resolution (ie. if upscaled with Display Tweaks)
+        static const auto screenSize = RE::BSGraphics::Renderer::GetScreenSize();
+
+        auto& io = ImGui::GetIO();
+        io.DisplaySize.x = static_cast<float>(screenSize.width);
+        io.DisplaySize.y = static_cast<float>(screenSize.height);
+    }
+    ImGui::NewFrame();
+    UI::Config::Hud();
+    ImGui::EndFrame();
+    ImGui::Render();
+    ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 }

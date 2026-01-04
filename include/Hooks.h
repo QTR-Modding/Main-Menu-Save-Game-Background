@@ -46,5 +46,12 @@ namespace Hooks {
         static void Install();
     };
 
+
+    struct DXGIPresentHook {
+        static void thunk(std::uint32_t a_timer);
+        static void install();
+        static inline REL::Relocation<decltype(thunk)> originalFunction;
+    };
+
     void Install();
 }
