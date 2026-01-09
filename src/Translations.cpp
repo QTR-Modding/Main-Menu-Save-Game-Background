@@ -1,6 +1,6 @@
 #include "Translations.h"
-
 #include <nlohmann/json.hpp>
+
 using json = nlohmann::json;
 
 namespace Translations {
@@ -8,7 +8,6 @@ namespace Translations {
     const char* defaultTranslation = "missing translation";
     static inline std::map<std::string, const char*> translations;
 }
-
 
 void Translations::Install() {
     std::ifstream file(translationsFolder);

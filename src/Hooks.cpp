@@ -1,238 +1,115 @@
 #include "Hooks.h"
+#include "Background.h"
+#include "Renderer.h"
+#include "Fade.h"
+#include "Init.h"
 
-#include <chrono>
-#include <thread>
-#include <iostream>
-#include "Graphics.h"
-#include "MainMenuManager.h"
-#include "Configuration.h"
-#include "SaveGame.h"
-#include "File.h"
-#include "Menu.h"
-#include "UI.h"
-#include "imgui.h"
-#include "imgui_impl_dx11.h"
-#include "imgui_impl_win32.h"
-
-#define QUICK_SAVE_DEVICE_ID 4
-#define AUTO_SAVE_DEVICE_ID 3
-#define MANUAL_SAVE_DEVICE_ID 2
-
-#define LAST_SAVE_FILE_PATH ".\\Data\\SKSE\\Plugins\\MainMenuSaveGameBackgroundLastSave.txt"
-
-
-bool isLoadingLastSave = false;
-
-int32_t Hooks::LoadGameHook::thunk(RE::BSWin32SaveDataSystemUtility* util, char* fileName, void* unknown) {
-
-    std::string contents;
-    std::string loweredFileName = SaveGame::LowerTrimESS(fileName);
-    if (File::ReadString(LAST_SAVE_FILE_PATH, contents) && contents == loweredFileName) {
-        isLoadingLastSave = true;
-    } else {
-        isLoadingLastSave = false;
-    }
-
-    return originalFunction(util, fileName, unknown);
-}
-
-void Hooks::LoadGameHook::Install() {
-    SKSE::AllocTrampoline(14);
-    auto& trampoline = SKSE::GetTrampoline();
-    originalFunction = trampoline.write_call<5>(REL::RelocationID(34677, 35600).address() + REL::Relocate(0xab, 0xab), thunk);
-}
-
-
-char* Hooks::SaveGameHook::thunk(RE::BGSSaveLoadManager* manager, void* a2, char* fileName, void* a4, int32_t deviceId) {
-
-    if (deviceId == QUICK_SAVE_DEVICE_ID) {
-        if (Configuration::UpdateOnQuickSave) {
-            MainMenuManager::OnSaveGame();
-            File::WriteString(LAST_SAVE_FILE_PATH, SaveGame::LowerTrimESS(fileName));
-            SKSEMenuFramework::DisposeTexture(TEXTURE_PATH);
+namespace Hooks {
+    struct RenderMistMenu {
+        static int64_t thunk(RE::NiCamera* a1, RE::BSShaderAccumulator* a2, int64_t a3) {
+            auto result = originalFunction(a1, a2, a3);
+            auto ui = RE::UI::GetSingleton();
+            auto image = Background::GetBackgroundImage();
+            Renderer::Render(image);
+            return result;
         }
-    } else if (deviceId == AUTO_SAVE_DEVICE_ID) {
-        if (Configuration::UpdateOnAutoSave) {
-            MainMenuManager::OnSaveGame();
-            File::WriteString(LAST_SAVE_FILE_PATH, SaveGame::LowerTrimESS(fileName));
-            SKSEMenuFramework::DisposeTexture(TEXTURE_PATH);
+        static inline REL::Relocation<decltype(thunk)> originalFunction;
+        static inline void Install() {
+            SKSE::AllocTrampoline(14);
+            auto& trampoline = SKSE::GetTrampoline();
+            originalFunction = trampoline.write_call<5>(REL::RelocationID(51855, 52727).address() + REL::Relocate(0x658, 0x659), thunk);
         }
-    } else if (deviceId == MANUAL_SAVE_DEVICE_ID) {
-        if (Configuration::UpdateOnManualSave) {
-            MainMenuManager::OnSaveGame();
-            File::WriteString(LAST_SAVE_FILE_PATH, SaveGame::LowerTrimESS(fileName));
-            SKSEMenuFramework::DisposeTexture(TEXTURE_PATH);
+    };
+
+    struct SaveGameHook {
+        static void Install() {
+            SKSE::AllocTrampoline(14);
+            auto& trampoline = SKSE::GetTrampoline();
+            originalFunction = trampoline.write_call<5>(REL::RelocationID(34818, 35727).address() + REL::Relocate(0x112, 0x1ce), thunk);
         }
-    } else {
-        if (Configuration::UpdateOnOtherSave) {
-            MainMenuManager::OnSaveGame();
-            File::WriteString(LAST_SAVE_FILE_PATH, SaveGame::LowerTrimESS(fileName));
-            SKSEMenuFramework::DisposeTexture(TEXTURE_PATH);
+        static char* thunk(RE::BGSSaveLoadManager* manager, void* a2, char* fileName, void* a4, int32_t deviceId) {
+            Background::OnSave(fileName, deviceId);
+            return originalFunction(manager, a2, fileName, a4, deviceId);
         }
-    }
-    
-    return originalFunction(manager, a2, fileName, a4, deviceId);
-}
+        static inline REL::Relocation<decltype(thunk)> originalFunction;
+    };
 
-void Hooks::SaveGameHook::Install() {
-    SKSE::AllocTrampoline(14);
-    auto& trampoline = SKSE::GetTrampoline();
-    originalFunction = trampoline.write_call<5>(REL::RelocationID(34818, 35727).address() + REL::Relocate(0x112, 0x1ce), thunk);
-}
-
-void Hooks::CreateD3DAndSwapChain::thunk() {
-    originalFunction();
-
-    if (const auto renderer = RE::BSGraphics::Renderer::GetSingleton()) {
-        auto data = renderer->GetRuntimeData();
-        auto swapChain = reinterpret_cast<IDXGISwapChain*>(data.renderWindows[0].swapChain);
-        if (!swapChain) {
-            logger::error("couldn't find swapChain");
-            return;
+    struct LoadGameHook {
+        static void Install() {
+            SKSE::AllocTrampoline(14);
+            auto& trampoline = SKSE::GetTrampoline();
+            originalFunction = trampoline.write_call<5>(REL::RelocationID(34614, 35534).address() + REL::Relocate(0x1a, 0x1a), thunk);
         }
 
-        DXGI_SWAP_CHAIN_DESC desc{};
-        if (FAILED(swapChain->GetDesc(std::addressof(desc)))) {
-            logger::error("IDXGISwapChain::GetDesc failed.");
-            return;
+        static bool thunk(RE::BGSSaveLoadManager* manager, const char* a_fileName, std::int32_t a_deviceID, std::uint32_t a_outputStats, bool a_checkForMods) {
+            Background::OnLoad(a_fileName);
+            auto result = originalFunction(manager, a_fileName, a_deviceID, a_outputStats, a_checkForMods);
+            return result;
         }
+        static inline REL::Relocation<decltype(thunk)> originalFunction;
+    };
 
-        auto device = reinterpret_cast<ID3D11Device*>(data.forwarder);
-        auto context = reinterpret_cast<ID3D11DeviceContext*>(data.context);
-
-        Graphics::Install(swapChain, device, context);
-
-        SKSE::log::info("Initializing ImGui...");
-
-        ImGui::CreateContext();
-
-        auto& io = ImGui::GetIO();
-        io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
-        io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
-        io.ConfigFlags |= ImGuiConfigFlags_NoMouseCursorChange;
-        io.IniFilename = nullptr;
-        io.ConfigWindowsMoveFromTitleBarOnly = true;
-
-        if (!ImGui_ImplWin32_Init(desc.OutputWindow)) {
-            SKSE::log::error("ImGui initialization failed (Win32)");
-            return;
+    struct CreateD3DAndSwapChain {
+        static void thunk() {
+            originalFunction();
+            Init::Main();
         }
-
-        if (!ImGui_ImplDX11_Init(device, context)) {
-            SKSE::log::error("ImGui initialization failed (DX11)");
-            return;
+        static inline REL::Relocation<decltype(thunk)> originalFunction;
+        static void Install() {
+            SKSE::AllocTrampoline(14);
+            auto& trampoline = SKSE::GetTrampoline();
+            const REL::Relocation<std::uintptr_t> target{REL::RelocationID(75595, 77226)};  // BSGraphics::InitD3D
+            originalFunction = trampoline.write_call<5>(target.address() + REL::Relocate(0x9, 0x275), CreateD3DAndSwapChain::thunk);
         }
+    };
 
-        SKSE::log::info("ImGui initialized.");
+    struct MainMenuProcessMessage {
+        static RE::UI_MESSAGE_RESULTS thunk(RE::MainMenu* menu, RE::UIMessage& a_message) {
+            if (a_message.type.get() == RE::UI_MESSAGE_TYPE::kShow) {
+                Background::LoadLastSaveTexture();
+            }
+            return originalFunction(menu, a_message);
+        }
+        static inline REL::Relocation<decltype(thunk)> originalFunction;
+        static inline void Install() { originalFunction = REL::Relocation<std::uintptr_t>(RE::VTABLE_MainMenu[0]).write_vfunc(0x4, thunk); }
+    };
 
-        io.Fonts->Build();
-    }
-}
+    struct RenderUIHook {
 
-void Hooks::CreateD3DAndSwapChain::Install() {
-    SKSE::AllocTrampoline(14);
-    auto& trampoline = SKSE::GetTrampoline();
-    const REL::Relocation<std::uintptr_t> target{REL::RelocationID(75595, 77226)};  // BSGraphics::InitD3D
-    originalFunction = trampoline.write_call<5>(target.address() + REL::Relocate(0x9, 0x275), CreateD3DAndSwapChain::thunk);
-}
-
-int64_t Hooks::RenderUIHook::thunk(int64_t gMenuManager) { 
-    MainMenuManager::OnRenderUI();
-    return originalFunction(gMenuManager);
-}
-
-void Hooks::RenderUIHook::Install() {
-    SKSE::AllocTrampoline(14);
-    auto& trampoline = SKSE::GetTrampoline();
-    originalFunction = trampoline.write_call<5>(REL::RelocationID(35556, 36555).address() + REL::Relocate(0x3ab, 0x371), thunk);
+        static int64_t thunk1(int64_t gMenuManager) {
+            Fade::FetchFadeFrame();
+            Background::FetchGameFrame();
+            auto result = originalFunction1(gMenuManager);
+            Fade::Render();
+            return result;
+        }
+        static int64_t thunk2(int64_t gMenuManager) {
+            Fade::FetchFadeFrame();
+            Background::FetchGameFrame();
+            auto result = originalFunction2(gMenuManager);
+            Fade::Render();
+            return result;
+        }
+        static inline REL::Relocation<decltype(thunk1)> originalFunction1;
+        static inline REL::Relocation<decltype(thunk2)> originalFunction2;
+        static void Install() {
+            auto& trampoline = SKSE::GetTrampoline();
+            SKSE::AllocTrampoline(14);
+            originalFunction1 = trampoline.write_call<5>(REL::RelocationID(35556, 36555).address() + REL::Relocate(0x3ab, 0x371), thunk1);
+            SKSE::AllocTrampoline(14);
+            originalFunction2 = trampoline.write_call<5>(REL::RelocationID(38085, 39039).address() + REL::Relocate(0x19a, 0x19a), thunk2);
+        }
+    };
 }
 
 void Hooks::Install() {
+    RenderMistMenu::Install();
+
     SaveGameHook::Install();
     LoadGameHook::Install();
+
     CreateD3DAndSwapChain::Install();
+    MainMenuProcessMessage::Install();
     RenderUIHook::Install();
-    LoadingScreenHook::Install();
-    AddMessageLoadingMenuHide::Install();
-    DXGIPresentHook::install();
 }
 
-void Hooks::LoadingScreenHook::Install() {
-    SKSE::AllocTrampoline(14);
-    auto& trampoline = SKSE::GetTrampoline();
-    originalFunction = trampoline.write_call<5>(REL::RelocationID(51048, 51929).address() + REL::Relocate(0x271, 0x176), thunk);
-}
-
-int64_t Hooks::LoadingScreenHook::thunk(int64_t a1, uint32_t a2) {
-    auto result = originalFunction(a1, a2);
-    auto dataLoader = RE::TESDataHandler::GetSingleton();
-    if (!dataLoader) return result;
-    auto dynamicLoadingScreenId = dataLoader->LookupFormID(0x800, "MainMenuSaveGameBackground.esp");
-    auto dynamicLoadingScreen = RE::TESForm::LookupByID<RE::TESLoadScreen>(dynamicLoadingScreenId);
-    if (!dynamicLoadingScreen) return result;
-    const auto ui = RE::UI::GetSingleton();
-    if (!ui) return result;
-    auto loadingMenu = ui->GetMenu<RE::LoadingMenu>();
-    if (!loadingMenu) return result;
-    auto data = loadingMenu->GetRuntimeData();
-    auto list = data.loadScreens;
-    for (auto i = 0; i < list.size(); i++) {
-        if (auto item = list[i]) {
-            if (item->GetFormID() == dynamicLoadingScreenId) {
-                if (result == dynamicLoadingScreenId) {
-                    result = 0;
-                }
-                if (Configuration::ReplaceLoadingScreenMesh && isLoadingLastSave) {
-                    auto original = data.loadScreens[result];
-                    if (original) {
-                        dynamicLoadingScreen->loadingText = original->loadingText;
-                    }
-                    return i;
-                }
-            }
-
-        }
-    }
-    return result;
-}
-
-void Hooks::AddMessageLoadingMenuHide::Install() {
-    SKSE::AllocTrampoline(14);
-    auto& trampoline = SKSE::GetTrampoline();
-    originalFunction = trampoline.write_call<5>(REL::RelocationID(13214, 13363).address() + REL::Relocate(0x211, 0x211), thunk);
-}
-
-void Hooks::AddMessageLoadingMenuHide::thunk(RE::UIMessageQueue* queue, const RE::BSFixedString& a_menuName, RE::UI_MESSAGE_TYPE a_type, RE::IUIMessageData* a_data) { 
-    originalFunction(queue, a_menuName, a_type, a_data);
-    if (Configuration::ReplaceLoadingScreenMesh && isLoadingLastSave) {
-        MainMenuManager::OverlayAlpha = 1.0;
-        RE::UIMessageQueue::GetSingleton()->AddMessage(RE::FaderMenu::MENU_NAME, RE::UI_MESSAGE_TYPE::kHide, nullptr);
-    }
-    isLoadingLastSave = false;
-}
-
-void Hooks::DXGIPresentHook::install() {
-    SKSE::AllocTrampoline(14);
-    auto& trampoline = SKSE::GetTrampoline();
-    originalFunction = trampoline.write_call<5>(REL::RelocationID(75461, 77246, 75461).address() + REL::Relocate(0x9, 0x9, 0x15), thunk);
-}
-
-void Hooks::DXGIPresentHook::thunk(std::uint32_t a_timer) {
-    originalFunction(a_timer);
-
-    ImGui_ImplDX11_NewFrame();
-    ImGui_ImplWin32_NewFrame();
-    {
-        // trick imgui into rendering at game's real resolution (ie. if upscaled with Display Tweaks)
-        static const auto screenSize = RE::BSGraphics::Renderer::GetScreenSize();
-
-        auto& io = ImGui::GetIO();
-        io.DisplaySize.x = static_cast<float>(screenSize.width);
-        io.DisplaySize.y = static_cast<float>(screenSize.height);
-    }
-    ImGui::NewFrame();
-    UI::Config::Hud();
-    ImGui::EndFrame();
-    ImGui::Render();
-    ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
-}

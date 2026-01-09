@@ -1,9 +1,9 @@
 ﻿#include "UI.h"
 #include "Configuration.h"
 #include "Translations.h"
-#include "Graphics.h"
-#include "MainMenuManager.h"
-#include "imgui.h"
+#include "Background.h"
+#include "Fade.h"
+
 void UI::Register() {
     if (!SKSEMenuFramework::IsInstalled()) {
         return;
@@ -11,68 +11,10 @@ void UI::Register() {
     SKSEMenuFramework::SetSection(MOD_NAME);
     SKSEMenuFramework::AddSectionItem(Translations::Get("MCP.Config"), Config::Render);
     SKSEMenuFramework::AddSectionItem(Translations::Get("MCP.PostProcess"), Config::PostProcess);
+    #ifndef NDEBUG
+        SKSEMenuFramework::AddSectionItem("Debug", Config::Debug);
+    #endif 
 }
-
-
-void __stdcall UI::Config::Hud() {
-
-
-    if (MainMenuManager::OverlayAlpha <= 0) {
-        return;
-    }
-    auto image = reinterpret_cast<ID3D11ShaderResourceView*>(SKSEMenuFramework::LoadTexture(TEXTURE_PATH));
-    if (!image) return;
-
-    float g_deltaTime = *(float*)REL::RelocationID(523660, 410199).address();
-
-    float fadeDuration = 0.5f;
-    MainMenuManager::OverlayAlpha -= g_deltaTime / fadeDuration;
-
-
-    if (MainMenuManager::OverlayAlpha < 0.0f) MainMenuManager::OverlayAlpha = 0.0f;
-
-
-    float screenW = ImGuiMCP::GetIO()->DisplaySize.x;
-    float screenH = ImGuiMCP::GetIO()->DisplaySize.y;
-
-
-    ID3D11Resource* res = nullptr;
-    image->GetResource(&res);
-
-    ID3D11Texture2D* tex = nullptr;
-    res->QueryInterface(__uuidof(ID3D11Texture2D), (void**)&tex);
-
-    D3D11_TEXTURE2D_DESC desc;
-    tex->GetDesc(&desc);
-
-    res->Release();
-    tex->Release();
-
-    float imageW = float(desc.Width);
-    float imageH = float(desc.Height);
-
-    float screenAspect = screenW / screenH;
-    float imageAspect = imageW / imageH;
-
-    float drawW;
-    float drawH;
-
-    if (imageAspect > screenAspect) {
-        drawH = screenH;
-        drawW = screenH * imageAspect;
-    } else {
-        drawW = screenW;
-        drawH = screenW / imageAspect;
-    }
-
-    float x = (screenW - drawW) * 0.5f;
-    float y = (screenH - drawH) * 0.5f;
-
-    auto list = ImGui::GetForegroundDrawList();
-    ImU32 color = IM_COL32(255, 255, 255, (int)(MainMenuManager::OverlayAlpha * 255));
-    list->AddImage(image, ImVec2{x, y}, ImVec2{x + drawW, y + drawH}, ImVec2{0, 0}, ImVec2{1, 1}, color);
-}
-
 
 void __stdcall UI::Config::Render() {
     ImGuiMCP::Text(Translations::Get("MCP.UpdateDescription"));
@@ -92,6 +34,23 @@ void __stdcall UI::Config::Render() {
     ImGuiMCP::Text(Translations::Get("MCP.LoadingScreen"));
     if (ImGuiMCPComponents::ToggleButton(Translations::Get("MCP.ReplaceLoadingScreenMesh"), &Configuration::ReplaceLoadingScreenMesh)) {
         Configuration::Save();
+    }
+}
+
+void AddImage(ID3D11ShaderResourceView* texture, float width) {
+    if (texture) {
+        D3D11_TEXTURE2D_DESC desc;
+        ID3D11Resource* resource = nullptr;
+        texture->GetResource(&resource);
+        auto tex2D = static_cast<ID3D11Texture2D*>(resource);
+        tex2D->GetDesc(&desc);
+
+        float aspect = static_cast<float>(desc.Height) / desc.Width;
+        float screenWidth = ImGuiMCP::GetIO()->DisplaySize.x;
+        float height = width * aspect;
+
+        ImGuiMCP::Image(texture, ImGuiMCP::ImVec2(width, height));
+        resource->Release();
     }
 }
 
@@ -170,7 +129,7 @@ void __stdcall UI::Config::PostProcess() {
         }
     }
 
-        {
+    {
         if (ImGuiMCP::Button(std::format("{}##SaturationClear", Translations::Get("MCP.Clear")).c_str())) {
             Configuration::Saturation = 1.0f;
             Configuration::Save();
@@ -188,24 +147,16 @@ void __stdcall UI::Config::PostProcess() {
         }
     }
 
-    if (ImGuiMCP::Button("Preview")) {
-        Graphics::UpdatePostProcessedFrame();
+    if (ImGuiMCP::Button("Update")) {
+        Background::Apply();
     }
 
-    auto texture = Graphics::GetPostProcessedFrame();
-    if (texture) {
-        D3D11_TEXTURE2D_DESC desc;
-        ID3D11Resource* resource = nullptr;
-        texture->GetResource(&resource);
-        auto tex2D = static_cast<ID3D11Texture2D*>(resource);
-        tex2D->GetDesc(&desc);
 
-        float aspect = static_cast<float>(desc.Height) / desc.Width;
-        float screenWidth = ImGuiMCP::GetIO()->DisplaySize.x;
-        float width = screenWidth / 3.0f;
-        float height = width * aspect;
+    auto screenWidth = ImGuiMCP::GetIO()->DisplaySize.x;
+    AddImage(Background::GetBackgroundImage(), screenWidth / 2);
 
-        ImGuiMCP::Image(texture, ImGuiMCP::ImVec2(width, height));
-        resource->Release();
-    }
+}
+
+void __stdcall UI::Config::Debug() {
+    AddImage(Fade::GetFadeFrame(), 640);
 }

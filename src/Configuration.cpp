@@ -9,10 +9,6 @@ void Configuration::Load() {
     }
     nlohmann::json j;
     file >> j;
-    if (j.contains("ScreenPoolingIntervalInMilliseconds")) {
-        ScreenPoolingIntervalInMilliseconds = j["ScreenPoolingIntervalInMilliseconds"];
-        logger::info("ScreenPoolingIntervalInMilliseconds: {}", ScreenPoolingIntervalInMilliseconds);
-    }
 
     if (j.contains("UpdateOnAutoSave")) {
         UpdateOnAutoSave = j["UpdateOnAutoSave"];
@@ -60,7 +56,6 @@ void Configuration::Save() {
     std::filesystem::create_directories(".\\Data\\SKSE\\Plugins");
 
     nlohmann::json j;
-    j["ScreenPoolingIntervalInMilliseconds"] = ScreenPoolingIntervalInMilliseconds;
     j["UpdateOnAutoSave"] = UpdateOnAutoSave;
     j["UpdateOnQuickSave"] = UpdateOnQuickSave;
     j["UpdateOnManualSave"] = UpdateOnManualSave;

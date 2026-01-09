@@ -4,7 +4,6 @@
     "Contrast": 1.0,
     "ReplaceLoadingScreenMesh": true,
     "Saturation": 1.0,
-    "ScreenPoolingIntervalInMilliseconds": 1000,
     "UpdateOnAutoSave": true,
     "UpdateOnManualSave": true,
     "UpdateOnOtherSave": true,

@@ -2,10 +2,11 @@
 #include "Hooks.h"
 #include "Configuration.h"
 #include "Translations.h"
+
 void OnMessage(SKSE::MessagingInterface::Message* message) {
-    if (message->type == SKSE::MessagingInterface::kDataLoaded) {
-    }
     if (message->type == SKSE::MessagingInterface::kPostLoad) {
+    }
+    if (message->type == SKSE::MessagingInterface::kPostLoadGame) {
     }
 }
 

@@ -1,6 +1,5 @@
 #pragma once
 namespace Configuration {
-    inline int ScreenPoolingIntervalInMilliseconds = 1000;
     inline bool UpdateOnAutoSave = false;
     inline bool UpdateOnQuickSave = true;
     inline bool UpdateOnManualSave = true;
@@ -11,6 +10,7 @@ namespace Configuration {
     inline float Brightness = 1.0f;
     inline float Saturation = 1.0f;
     inline float Contrast = 1.0f;
+    inline float FadeDuration = 1.f;
 
     inline bool ReplaceLoadingScreenMesh = true;
 
