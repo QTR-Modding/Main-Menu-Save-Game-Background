@@ -12,5 +12,6 @@ class ScreenCapture {
 public:
     static void Install(IDXGISwapChain* swapChain, ID3D11Device* device, ID3D11DeviceContext* context);
     void FetchTextureBuffer();
+    void Clear();
     ID3D11ShaderResourceView* GetTextureBuffer();
 };

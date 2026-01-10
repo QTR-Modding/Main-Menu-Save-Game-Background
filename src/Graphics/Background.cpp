@@ -9,7 +9,6 @@
 
 #include <shared_mutex> 
 
-#define LAST_SAVE_FILE_NAME "LastSave"
 #define QUICK_SAVE_DEVICE_ID 4
 #define AUTO_SAVE_DEVICE_ID 3
 #define MANUAL_SAVE_DEVICE_ID 2
@@ -53,10 +52,8 @@ namespace Background {
         std::unique_lock<std::shared_mutex> lock(mutex);
 
         std::vector<std::wstring> items;
-        items.push_back(SaveGame::getWPath(a_fileName).c_str());
-        items.push_back(SaveGame::getWPath(LAST_SAVE_FILE_NAME).c_str());
+        items.push_back(SaveGame::getDDSFullWPath(a_fileName).c_str());
         TextureSaver::SaveResourceAsDDS(currentGameFrame.GetTextureBuffer(), items);
-        backgroundImage.SetTexture(PostProcessor::PostProcessResource(currentGameFrame.GetTextureBuffer()));
     }
 }
 
@@ -97,18 +94,27 @@ void Background::FetchGameFrame() {
 }
 
 void Background::OnLoad(const char* a_fileName) {
-    auto path = SaveGame::getPath(a_fileName);
+    auto path = SaveGame::replaceESSWithDDS(a_fileName);
     rawBackgroundImage.SetTexture(path);
     auto texture = PostProcessor::PostProcessResource(rawBackgroundImage.GetTexture());
     backgroundImage.SetTexture(texture);
 }
 
 void Background::LoadLastSaveTexture() {
-    Background::OnLoad(LAST_SAVE_FILE_NAME);
+    auto manager = RE::BGSSaveLoadManager::GetSingleton();
+    if (manager->lastFileName.length() == 1) {
+        manager->PopulateSaveList();
+    }
+    auto path = SaveGame::GetFullPath(manager->lastFileName.c_str());
+    Background::OnLoad(path.c_str());
 }
 
 void Background::Apply() {
     if (auto texture = rawBackgroundImage.GetTexture()) {
         backgroundImage.SetTexture(PostProcessor::PostProcessResource(texture));
     }
+}
+
+void Background::Clear() {
+    backgroundImage.SetTexture(nullptr);
 }

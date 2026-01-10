@@ -3,9 +3,11 @@
 #include "ScreenCapture.h"
 #include "imgui_impl_dx11.h"
 #include "imgui_impl_win32.h"
+#include "Background.h"
 
 namespace Fade {
     ScreenCapture fadeFrame;
+    bool wasFading = false;
 
     double GetDouble(RE::GFxValue parent, const char* name) {
         RE::GFxValue result;
@@ -41,19 +43,43 @@ namespace Fade {
         SetDouble(_root, "_alpha", 0);
     }
 
+    void ResetFadeMenu() {
+        auto ui = RE::UI::GetSingleton();
+        auto faderMenu = ui->GetMenu<RE::FaderMenu>();
+
+        RE::GFxValue _root;
+        RE::GFxValue mc_FaderMenu;
+
+        if (!faderMenu->uiMovie->GetVariable(&_root, "_root")) {
+            return;
+        }
+
+        SetDouble(_root, "_alpha", 100);
+    }
+
+
     void RenderFade() {
         auto fade = GetFadeAmmount();
 
         if (fade <= 0) {
+            if (wasFading) {
+                logger::info("clear");
+                fadeFrame.Clear();
+                wasFading = false;
+            }
+            return;
+        }
+
+        wasFading = true;
+
+        auto image = GetFadeFrame();
+
+        if (!image) {
+            ResetFadeMenu();
             return;
         }
 
         MofiyFadeMenu();
-
-        auto image = GetFadeFrame();
-        if (!image) {
-            return;
-        }
 
         float g_deltaTime = *(float*)REL::RelocationID(523660, 410199).address();
 
@@ -159,3 +185,4 @@ void Fade::Render() {
     ImGui::Render();
     ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 }
+

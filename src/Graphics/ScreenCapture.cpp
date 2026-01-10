@@ -49,4 +49,17 @@ void ScreenCapture::FetchTextureBuffer() {
     backBuffer->Release();
 }
 
+void ScreenCapture::Clear() {
+    auto srv = cachedSRV;
+    auto texture = cachedTexture;
+    cachedSRV = nullptr;
+    cachedTexture = nullptr;
+    if (srv) {
+        srv->Release();
+    }
+    if (texture) {
+        texture->Release();
+    }
+}
+
 ID3D11ShaderResourceView* ScreenCapture::GetTextureBuffer() { return cachedSRV; }

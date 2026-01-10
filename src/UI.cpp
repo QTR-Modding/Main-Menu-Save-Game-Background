@@ -2,7 +2,6 @@
 #include "Configuration.h"
 #include "Translations.h"
 #include "Background.h"
-#include "Fade.h"
 
 void UI::Register() {
     if (!SKSEMenuFramework::IsInstalled()) {
@@ -34,23 +33,6 @@ void __stdcall UI::Config::Render() {
     ImGuiMCP::Text(Translations::Get("MCP.LoadingScreen"));
     if (ImGuiMCPComponents::ToggleButton(Translations::Get("MCP.ReplaceLoadingScreenMesh"), &Configuration::ReplaceLoadingScreenMesh)) {
         Configuration::Save();
-    }
-}
-
-void AddImage(ID3D11ShaderResourceView* texture, float width) {
-    if (texture) {
-        D3D11_TEXTURE2D_DESC desc;
-        ID3D11Resource* resource = nullptr;
-        texture->GetResource(&resource);
-        auto tex2D = static_cast<ID3D11Texture2D*>(resource);
-        tex2D->GetDesc(&desc);
-
-        float aspect = static_cast<float>(desc.Height) / desc.Width;
-        float screenWidth = ImGuiMCP::GetIO()->DisplaySize.x;
-        float height = width * aspect;
-
-        ImGuiMCP::Image(texture, ImGuiMCP::ImVec2(width, height));
-        resource->Release();
     }
 }
 
@@ -150,13 +132,5 @@ void __stdcall UI::Config::PostProcess() {
     if (ImGuiMCP::Button("Update")) {
         Background::Apply();
     }
-
-
-    auto screenWidth = ImGuiMCP::GetIO()->DisplaySize.x;
-    AddImage(Background::GetBackgroundImage(), screenWidth / 2);
-
 }
 
-void __stdcall UI::Config::Debug() {
-    AddImage(Fade::GetFadeFrame(), 640);
-}

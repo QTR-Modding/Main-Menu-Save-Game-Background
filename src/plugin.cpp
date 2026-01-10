@@ -2,9 +2,14 @@
 #include "Hooks.h"
 #include "Configuration.h"
 #include "Translations.h"
+#include "Background.h"
+#include "Fade.h"
 
 void OnMessage(SKSE::MessagingInterface::Message* message) {
-    if (message->type == SKSE::MessagingInterface::kPostLoad) {
+    if (message->type == SKSE::MessagingInterface::kPostLoadGame) {
+        SKSE::GetTaskInterface()->AddTask([](){
+            Background::Clear();
+        });
     }
     if (message->type == SKSE::MessagingInterface::kPostLoadGame) {
     }

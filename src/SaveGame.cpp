@@ -1,10 +1,10 @@
 #include "SaveGame.h"
 
-std::string SaveGame::GetName(const char* fileName) {
+std::string SaveGame::GetFullPath(const char* fileName) {
     auto util = RE::BSWin32SaveDataSystemUtility::GetSingleton();
     char fullPath[242];
     util->PrepareFileSavePath(fileName, fullPath, 0, 0);
-    return fileName;
+    return fullPath;
 }
 
 std::string SaveGame::TrimESS(const char* name) { 
@@ -28,16 +28,19 @@ std::string SaveGame::TrimESS(const char* name) {
     return str;
 }
 
-std::string SaveGame::getPath(const char* a_fileName) {
-    auto util = RE::BSWin32SaveDataSystemUtility::GetSingleton();
-    char fullPath[242];
-    util->PrepareFileSavePath(a_fileName, fullPath, 0, 0);
-    std::string path = SaveGame::TrimESS(fullPath) + ".dds";
+std::string SaveGame::getDDSFullPath(const char* a_fileName) {
+    auto fullPath = GetFullPath(a_fileName);
+    std::string path = SaveGame::TrimESS(fullPath.c_str()) + ".dds";
     return path;
 }
 
-std::wstring SaveGame::getWPath(const char* a_fileName) {
-    auto path = getPath(a_fileName);
+std::string SaveGame::replaceESSWithDDS(const char* a_fileName) {
+    std::string path = SaveGame::TrimESS(a_fileName) + ".dds";
+    return path;
+}
+
+std::wstring SaveGame::getDDSFullWPath(const char* a_fileName) {
+    auto path = getDDSFullPath(a_fileName);
     std::wstring wpath(path.begin(), path.end());
     return wpath;
 }

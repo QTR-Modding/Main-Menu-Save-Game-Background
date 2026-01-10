@@ -37,18 +37,12 @@ namespace Hooks {
     };
 
     struct LoadGameHook {
-        static void Install() {
-            SKSE::AllocTrampoline(14);
-            auto& trampoline = SKSE::GetTrampoline();
-            originalFunction = trampoline.write_call<5>(REL::RelocationID(34614, 35534).address() + REL::Relocate(0x1a, 0x1a), thunk);
-        }
-
-        static bool thunk(RE::BGSSaveLoadManager* manager, const char* a_fileName, std::int32_t a_deviceID, std::uint32_t a_outputStats, bool a_checkForMods) {
+        static errno_t thunk(RE::BSSaveDataSystemUtility* utility, const char* a_fileName, int64_t a3) {
             Background::OnLoad(a_fileName);
-            auto result = originalFunction(manager, a_fileName, a_deviceID, a_outputStats, a_checkForMods);
-            return result;
+            return originalFunction(utility, a_fileName, a3);
         }
         static inline REL::Relocation<decltype(thunk)> originalFunction;
+        static inline void Install() { originalFunction = REL::Relocation<std::uintptr_t>(RE::VTABLE_BSWin32SaveDataSystemUtility[0]).write_vfunc(0x11, thunk); }
     };
 
     struct CreateD3DAndSwapChain {
@@ -79,7 +73,6 @@ namespace Hooks {
     struct RenderUIHook {
 
         static int64_t thunk1(int64_t gMenuManager) {
-            Fade::FetchFadeFrame();
             Background::FetchGameFrame();
             auto result = originalFunction1(gMenuManager);
             Fade::Render();
@@ -111,7 +104,8 @@ void Hooks::Install() {
     LoadGameHook::Install();
 
     CreateD3DAndSwapChain::Install();
-    MainMenuProcessMessage::Install();
     RenderUIHook::Install();
+
+    MainMenuProcessMessage::Install();
 }
 

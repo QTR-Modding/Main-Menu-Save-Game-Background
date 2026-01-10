@@ -9,4 +9,5 @@ namespace Background {
     void FetchGameFrame();
     void LoadLastSaveTexture();
     void Apply();
+    void Clear();
 }
