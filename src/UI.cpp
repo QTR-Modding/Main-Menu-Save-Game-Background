@@ -16,6 +16,12 @@ void UI::Register() {
 }
 
 void __stdcall UI::Config::Render() {
+    ImGuiMCP::Text(Translations::Get("MCP.Features"));
+
+
+
+
+
     ImGuiMCP::Text(Translations::Get("MCP.UpdateDescription"));
 
     if (ImGuiMCPComponents::ToggleButton(Translations::Get("MCP.UpdateOnAutoSave"), &Configuration::UpdateOnAutoSave)) {
@@ -31,7 +37,18 @@ void __stdcall UI::Config::Render() {
         Configuration::Save();
     }
     ImGuiMCP::Text(Translations::Get("MCP.LoadingScreen"));
-    if (ImGuiMCPComponents::ToggleButton(Translations::Get("MCP.ReplaceLoadingScreenMesh"), &Configuration::ReplaceLoadingScreenMesh)) {
+    
+    if (ImGuiMCPComponents::ToggleButton(Translations::Get("MCP.EnableOnLoadingScreens"), &Configuration::EnableOnLoadingScreens)) {
+        Configuration::Save();
+    }
+    
+    if (ImGuiMCPComponents::ToggleButton(Translations::Get("MCP.DisableLoadingScreenMesh"), &Configuration::DisableLoadingScreenMesh)) {
+        Configuration::Save();
+    }
+    
+    ImGuiMCP::Text(Translations::Get("MCP.MainMenu"));
+    
+    if (ImGuiMCPComponents::ToggleButton(Translations::Get("MCP.EnableOnMainMenu"), &Configuration::EnableOnMainMenu)) {
         Configuration::Save();
     }
 }

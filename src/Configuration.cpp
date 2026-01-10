@@ -26,10 +26,6 @@ void Configuration::Load() {
         UpdateOnOtherSave = j["UpdateOnOtherSave"];
         logger::info("UpdateOnOtherSave: {}", UpdateOnOtherSave);
     }
-    if (j.contains("ReplaceLoadingScreenMesh")) {
-        ReplaceLoadingScreenMesh = j["ReplaceLoadingScreenMesh"];
-        logger::info("ReplaceLoadingScreenMesh: {}", ReplaceLoadingScreenMesh);
-    }
     if (j.contains("BlurRadius")) {
         BlurRadius = j["BlurRadius"];
         logger::info("BlurRadius: {}", BlurRadius);
@@ -50,6 +46,18 @@ void Configuration::Load() {
         Contrast = j["Contrast"];
         logger::info("Contrast: {}", Contrast);
     }
+    if (j.contains("EnableOnLoadingScreens")) {
+        EnableOnLoadingScreens = j["EnableOnLoadingScreens"];
+        logger::info("EnableOnLoadingScreens: {}", EnableOnLoadingScreens);
+    }
+    if (j.contains("EnableOnMainMenu")) {
+        EnableOnMainMenu = j["EnableOnMainMenu"];
+        logger::info("EnableOnMainMenu: {}", EnableOnMainMenu);
+    }
+    if (j.contains("DisableLoadingScreenMesh")) {
+        DisableLoadingScreenMesh = j["DisableLoadingScreenMesh"];
+        logger::info("DisableLoadingScreenMesh: {}", DisableLoadingScreenMesh);
+    }
 }
 
 void Configuration::Save() {
@@ -60,12 +68,14 @@ void Configuration::Save() {
     j["UpdateOnQuickSave"] = UpdateOnQuickSave;
     j["UpdateOnManualSave"] = UpdateOnManualSave;
     j["UpdateOnOtherSave"] = UpdateOnOtherSave;
-    j["ReplaceLoadingScreenMesh"] = ReplaceLoadingScreenMesh;
     j["BlurRadius"] = BlurRadius;
     j["VignetteStrength"] = VignetteStrength;
     j["Brightness"] = Brightness;
     j["Saturation"] = Saturation;
     j["Contrast"] = Contrast;
+    j["EnableOnLoadingScreens"] = EnableOnLoadingScreens;
+    j["EnableOnMainMenu"] = EnableOnMainMenu;
+    j["DisableLoadingScreenMesh"] = DisableLoadingScreenMesh;
 
     std::ofstream file(".\\Data\\SKSE\\Plugins\\MainMenuSaveGameBackground.json");
     if (!file.is_open()) {

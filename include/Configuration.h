@@ -4,6 +4,10 @@ namespace Configuration {
     inline bool UpdateOnQuickSave = true;
     inline bool UpdateOnManualSave = true;
     inline bool UpdateOnOtherSave = true;
+    
+    inline bool EnableOnLoadingScreens = true;
+    inline bool EnableOnMainMenu = true;
+    inline bool DisableLoadingScreenMesh = false;
 
     inline float BlurRadius = 1.0f;
     inline float VignetteStrength = 1.0f;
@@ -11,8 +15,6 @@ namespace Configuration {
     inline float Saturation = 1.0f;
     inline float Contrast = 1.0f;
     inline float FadeDuration = 1.f;
-
-    inline bool ReplaceLoadingScreenMesh = true;
 
     void Load();
     void Save();

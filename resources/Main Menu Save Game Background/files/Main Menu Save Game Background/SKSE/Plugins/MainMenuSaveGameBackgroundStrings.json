@@ -15,5 +15,8 @@
   "MCP.Config": "Config",
   "MCP.PostProcess": "Post Process",
   "MCP.LoadingScreen": "Loading Screen Configuration:",
-  "MCP.ReplaceLoadingScreenMesh": "Replace Loading Screen Mesh"
+  "MCP.EnableOnLoadingScreens": "Enable Background On Loading Screens",
+  "MCP.DisableLoadingScreenMesh": "Disable Loading Screen Mesh",
+  "MCP.MainMenu": "Main Menu Configuration:",
+  "MCP.EnableOnMainMenu": "Enable Background On Main Menu"
 }

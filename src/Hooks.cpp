@@ -3,13 +3,15 @@
 #include "Renderer.h"
 #include "Fade.h"
 #include "Init.h"
-
+#include "Configuration.h"
 namespace Hooks {
     struct RenderMistMenu {
         static int64_t thunk(RE::NiCamera* a1, RE::BSShaderAccumulator* a2, int64_t a3) {
             auto result = originalFunction(a1, a2, a3);
             auto ui = RE::UI::GetSingleton();
-            if (ui->IsMenuOpen(RE::MainMenu::MENU_NAME) || ui->IsMenuOpen(RE::LoadingMenu::MENU_NAME)) {
+            if ((ui->IsMenuOpen(RE::MainMenu::MENU_NAME) && Configuration::EnableOnMainMenu) || 
+                (ui->IsMenuOpen(RE::LoadingMenu::MENU_NAME) && Configuration::EnableOnLoadingScreens)
+            ){
                 auto image = Background::GetBackgroundImage();
                 Renderer::Render(image);
             }
@@ -95,6 +97,24 @@ namespace Hooks {
             originalFunction2 = trampoline.write_call<5>(REL::RelocationID(38085, 39039).address() + REL::Relocate(0x19a, 0x19a), thunk2);
         }
     };
+
+    struct LoadingScreenHook {
+        static RE::TESObjectSTAT* thunk(RE::TESLoadScreen* a1) { 
+            auto result = originalFunction(a1);
+
+            if (Configuration::DisableLoadingScreenMesh) {
+                return nullptr;
+            }
+
+            return result;
+        }
+        static inline REL::Relocation<decltype(thunk)> originalFunction;
+        static void Install() {
+            SKSE::AllocTrampoline(14);
+            auto& trampoline = SKSE::GetTrampoline();
+            originalFunction = trampoline.write_call<5>(REL::RelocationID(51048, 51929).address() + REL::Relocate(0x384, 0x27b), thunk);
+        }
+    };
 }
 
 void Hooks::Install() {
@@ -107,5 +127,6 @@ void Hooks::Install() {
     RenderUIHook::Install();
 
     MainMenuProcessMessage::Install();
-}
 
+    LoadingScreenHook::Install();
+}
