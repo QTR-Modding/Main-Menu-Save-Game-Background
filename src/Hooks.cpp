@@ -9,8 +9,10 @@ namespace Hooks {
         static int64_t thunk(RE::NiCamera* a1, RE::BSShaderAccumulator* a2, int64_t a3) {
             auto result = originalFunction(a1, a2, a3);
             auto ui = RE::UI::GetSingleton();
-            auto image = Background::GetBackgroundImage();
-            Renderer::Render(image);
+            if (ui->IsMenuOpen(RE::MainMenu::MENU_NAME) || ui->IsMenuOpen(RE::LoadingMenu::MENU_NAME)) {
+                auto image = Background::GetBackgroundImage();
+                Renderer::Render(image);
+            }
             return result;
         }
         static inline REL::Relocation<decltype(thunk)> originalFunction;
