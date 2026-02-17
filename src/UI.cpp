@@ -50,6 +50,7 @@ void __stdcall UI::Config::Render() {
     if (ImGuiMCP::InputInt(Translations::Get("MCP.MaximumNumberOfBackgroundSaveImages"), &Configuration::MaximumNumberOfBackgroundSaveImages)) {
         Configuration::Save();
     }
+    ImGuiMCP::Text(Translations::Get("MCP.MaximumNumberOfBackgroundSaveImagesDisclaimer"));
 }
 
 void __stdcall UI::Config::PostProcess() {
