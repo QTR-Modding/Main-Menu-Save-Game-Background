@@ -56,9 +56,9 @@ namespace Background {
         TextureSaver::SaveResourceAsDDS(currentGameFrame.GetTextureBuffer(), items);
 
         std::thread backgroundThread([]() {
-            if (Configuration::SaveImageDeletionWindow > 0) {
+            if (Configuration::MaximumNumberOfBackgroundSaveImages > 0) {
                 auto allSaves = SaveGame::GetAllSaveImages();
-                for (int i = 0; i < ((int)allSaves.size()) - Configuration::SaveImageDeletionWindow; i++) {
+                for (int i = 0; i < ((int)allSaves.size()) - Configuration::MaximumNumberOfBackgroundSaveImages; i++) {
                     if (i < allSaves.size()) {
                         SaveGame::DeleteSaveFile(allSaves[i]);
                     }

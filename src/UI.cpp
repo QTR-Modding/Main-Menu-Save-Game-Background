@@ -12,7 +12,6 @@ void UI::Register() {
     SKSEMenuFramework::AddSectionItem(Translations::Get("MCP.PostProcess"), Config::PostProcess);
 }
 
-
 void __stdcall UI::Config::Render() {
     ImGuiMCP::Text(Translations::Get("MCP.Features"));
 
@@ -48,7 +47,7 @@ void __stdcall UI::Config::Render() {
 
     ImGuiMCP::Text(Translations::Get("MCP.DDSSaveFiles"));
 
-    if (ImGuiMCP::InputInt(Translations::Get("MCP.SaveImageDeletionWindow"), &Configuration::SaveImageDeletionWindow)) {
+    if (ImGuiMCP::InputInt(Translations::Get("MCP.MaximumNumberOfBackgroundSaveImages"), &Configuration::MaximumNumberOfBackgroundSaveImages)) {
         Configuration::Save();
     }
 }

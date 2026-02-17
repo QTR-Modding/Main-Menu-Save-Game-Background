@@ -19,6 +19,6 @@
   "MCP.DisableLoadingScreenMesh": "Disable Loading Screen Mesh",
   "MCP.MainMenu": "Main Menu Configuration:",
   "MCP.EnableOnMainMenu": "Enable Background On Main Menu",
-  "MCP.SaveImageDeletionWindow": "Save Image Deletion Window (Set to -1 to disable)",
+  "MCP.MaximumNumberOfBackgroundSaveImages": "Maximun Number Of Background Save Image (Set to -1 to unlimited save images, that may use too much disk space)",
   "MCP.DDSSaveFiles": "DDS Save Files"
 }

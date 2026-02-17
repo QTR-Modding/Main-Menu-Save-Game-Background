@@ -15,7 +15,7 @@ namespace Configuration {
     inline float Saturation = 1.0f;
     inline float Contrast = 1.0f;
     inline float FadeDuration = 1.f;
-    inline int SaveImageDeletionWindow = 1;
+    inline int MaximumNumberOfBackgroundSaveImages = 1;
 
     void Load();
     void Save();
