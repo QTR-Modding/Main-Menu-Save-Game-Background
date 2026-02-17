@@ -58,6 +58,10 @@ void Configuration::Load() {
         DisableLoadingScreenMesh = j["DisableLoadingScreenMesh"];
         logger::info("DisableLoadingScreenMesh: {}", DisableLoadingScreenMesh);
     }
+    if (j.contains("SaveImageDeletionWindow")) {
+        SaveImageDeletionWindow = j["SaveImageDeletionWindow"];
+        logger::info("SaveImageDeletionWindow: {}", SaveImageDeletionWindow);
+    }
 }
 
 void Configuration::Save() {
@@ -76,6 +80,7 @@ void Configuration::Save() {
     j["EnableOnLoadingScreens"] = EnableOnLoadingScreens;
     j["EnableOnMainMenu"] = EnableOnMainMenu;
     j["DisableLoadingScreenMesh"] = DisableLoadingScreenMesh;
+    j["SaveImageDeletionWindow"] = SaveImageDeletionWindow;
 
     std::ofstream file(".\\Data\\SKSE\\Plugins\\MainMenuSaveGameBackground.json");
     if (!file.is_open()) {

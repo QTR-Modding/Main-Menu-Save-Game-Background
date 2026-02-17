@@ -18,5 +18,7 @@
   "MCP.EnableOnLoadingScreens": "Enable Background On Loading Screens",
   "MCP.DisableLoadingScreenMesh": "Disable Loading Screen Mesh",
   "MCP.MainMenu": "Main Menu Configuration:",
-  "MCP.EnableOnMainMenu": "Enable Background On Main Menu"
+  "MCP.EnableOnMainMenu": "Enable Background On Main Menu",
+  "MCP.SaveImageDeletionWindow": "Save Image Deletion Window (Set to -1 to disable)",
+  "MCP.DDSSaveFiles": "DDS Save Files"
 }

@@ -2,7 +2,7 @@
 #include "Configuration.h"
 #include "Translations.h"
 #include "Background.h"
-
+#include "SaveGame.h"
 void UI::Register() {
     if (!SKSEMenuFramework::IsInstalled()) {
         return;
@@ -10,17 +10,11 @@ void UI::Register() {
     SKSEMenuFramework::SetSection(MOD_NAME);
     SKSEMenuFramework::AddSectionItem(Translations::Get("MCP.Config"), Config::Render);
     SKSEMenuFramework::AddSectionItem(Translations::Get("MCP.PostProcess"), Config::PostProcess);
-    #ifndef NDEBUG
-        SKSEMenuFramework::AddSectionItem("Debug", Config::Debug);
-    #endif 
 }
+
 
 void __stdcall UI::Config::Render() {
     ImGuiMCP::Text(Translations::Get("MCP.Features"));
-
-
-
-
 
     ImGuiMCP::Text(Translations::Get("MCP.UpdateDescription"));
 
@@ -49,6 +43,12 @@ void __stdcall UI::Config::Render() {
     ImGuiMCP::Text(Translations::Get("MCP.MainMenu"));
     
     if (ImGuiMCPComponents::ToggleButton(Translations::Get("MCP.EnableOnMainMenu"), &Configuration::EnableOnMainMenu)) {
+        Configuration::Save();
+    }
+
+    ImGuiMCP::Text(Translations::Get("MCP.DDSSaveFiles"));
+
+    if (ImGuiMCP::InputInt(Translations::Get("MCP.SaveImageDeletionWindow"), &Configuration::SaveImageDeletionWindow)) {
         Configuration::Save();
     }
 }

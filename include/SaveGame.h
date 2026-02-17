@@ -6,4 +6,7 @@ namespace SaveGame {
     std::string getDDSFullPath(const char* a_fileName);
     std::string replaceESSWithDDS(const char* a_fileName);
     std::wstring getDDSFullWPath(const char* a_fileName);
+    std::string GetSavesFolderPath();
+    std::vector<std::string> GetAllSaveImages();
+    void DeleteSaveFile(std::filesystem::path file);
 }

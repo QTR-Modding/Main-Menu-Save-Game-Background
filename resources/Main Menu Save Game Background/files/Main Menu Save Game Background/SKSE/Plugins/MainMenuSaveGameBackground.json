@@ -10,5 +10,6 @@
     "UpdateOnManualSave": true,
     "UpdateOnOtherSave": true,
     "UpdateOnQuickSave": true,
-    "VignetteStrength": 0.0
+    "VignetteStrength": 0.0,
+    "SaveImageDeletionWindow": 20
 }

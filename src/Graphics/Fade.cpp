@@ -63,7 +63,6 @@ namespace Fade {
 
         if (fade <= 0) {
             if (wasFading) {
-                logger::info("clear");
                 fadeFrame.Clear();
                 wasFading = false;
             }

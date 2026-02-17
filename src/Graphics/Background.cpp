@@ -44,7 +44,7 @@ namespace Background {
     };
 
     std::shared_mutex mutex;
-    ExternalTextureContainer rawBackgroundImage;
+    ExternalTextureContainer rawBackgroundImage;    
     TextureContainer backgroundImage;
     ScreenCapture currentGameFrame;
 
@@ -54,6 +54,19 @@ namespace Background {
         std::vector<std::wstring> items;
         items.push_back(SaveGame::getDDSFullWPath(a_fileName).c_str());
         TextureSaver::SaveResourceAsDDS(currentGameFrame.GetTextureBuffer(), items);
+
+        std::thread backgroundThread([]() {
+            if (Configuration::SaveImageDeletionWindow > 0) {
+                auto allSaves = SaveGame::GetAllSaveImages();
+                for (int i = 0; i < ((int)allSaves.size()) - Configuration::SaveImageDeletionWindow; i++) {
+                    if (i < allSaves.size()) {
+                        SaveGame::DeleteSaveFile(allSaves[i]);
+                    }
+                }
+            }
+        });
+
+        backgroundThread.detach();
     }
 }
 
@@ -102,10 +115,11 @@ void Background::OnLoad(const char* a_fileName) {
 
 void Background::LoadLastSaveTexture() {
     auto manager = RE::BGSSaveLoadManager::GetSingleton();
-    if (manager->lastFileName.length() == 1) {
+    if (manager->lastFileFullName[0] == '\0') {
         manager->PopulateSaveList();
     }
-    auto path = SaveGame::GetFullPath(manager->lastFileName.c_str());
+
+    auto path = SaveGame::GetFullPath(manager->lastFileFullName);
     Background::OnLoad(path.c_str());
 }
 
